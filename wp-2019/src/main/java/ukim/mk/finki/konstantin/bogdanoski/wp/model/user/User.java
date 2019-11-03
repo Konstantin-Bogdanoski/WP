@@ -2,9 +2,12 @@ package ukim.mk.finki.konstantin.bogdanoski.wp.model.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.Order;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,12 +17,17 @@ import java.util.Objects;
  */
 @Getter
 @Setter
+@Entity
+@Table(name = "PizzaUser")
 public class User extends BaseEntity {
     private String username;
     private String firstName;
     private String lastName;
     private String password;
-    private List<Order> orderList;
+    private String userRole;
+
+    @OneToMany
+    private List<PizzaOrder> orderList;
 
     public User() {
         orderList = new ArrayList<>();

@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -33,13 +32,12 @@ public class LoginFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String path = request.getServletPath();
-        String username = request.getSession().getAttribute("username").toString();
-        String password = request.getSession().getAttribute("password").toString();
+        String username = (String) request.getSession().getAttribute("username");
+        String password = (String) request.getSession().getAttribute("password");
 
-        if (!"/login".equals(path) && (username == null || username.isEmpty() || password == null || password.isEmpty()) && !userService.findAll().contains(new User(username)))
+        if (!"/login".equals(path) && (username == null || username.isEmpty() || password == null || password.isEmpty() || !(userService.findByUsername(username) == null)))
             response.sendRedirect("/login");
-
-        if (userService.findByUsername(username).getPassword().equals(password))
+        else
             filterChain.doFilter(servletRequest, servletResponse);
     }
 

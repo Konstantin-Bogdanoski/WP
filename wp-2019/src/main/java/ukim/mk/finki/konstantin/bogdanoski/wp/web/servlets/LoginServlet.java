@@ -1,5 +1,6 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.servlets;
 
+import lombok.AllArgsConstructor;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 
@@ -14,13 +15,9 @@ import java.io.IOException;
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 @WebServlet(urlPatterns = "/login")
+@AllArgsConstructor
 public class LoginServlet extends HttpServlet {
-
     private final SpringTemplateEngine springTemplateEngine;
-
-    public LoginServlet(SpringTemplateEngine springTemplateEngine) {
-        this.springTemplateEngine = springTemplateEngine;
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -31,8 +28,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
-        String username = req.getParameter("username");
-        session.setAttribute("username", username);
+        session.setAttribute("username", req.getParameter("username"));
+        session.setAttribute("password", req.getParameter("password"));
         resp.sendRedirect("/");
     }
 }

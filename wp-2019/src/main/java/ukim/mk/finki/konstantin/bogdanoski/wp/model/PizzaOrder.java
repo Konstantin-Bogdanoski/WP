@@ -6,7 +6,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -14,7 +14,11 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-public class Order extends BaseEntity {
+public class PizzaOrder extends BaseEntity {
+    @OneToOne
     private Pizza pizza;
+    private String size;
+    @OneToOne
     private User user;
+    private String address;
 }
