@@ -33,8 +33,9 @@ public class User extends BaseEntity {
         orderList = new ArrayList<>();
     }
 
-    public User(String username) {
+    public User(String username, String password) {
         this.username = username;
+        this.password = password;
     }
 
     @Override

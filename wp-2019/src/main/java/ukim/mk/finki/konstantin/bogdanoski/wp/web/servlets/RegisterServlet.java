@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -20,7 +21,6 @@ import java.io.IOException;
 @AllArgsConstructor
 public class RegisterServlet extends HttpServlet {
     private final SpringTemplateEngine springTemplateEngine;
-    private final UserService userService;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -30,15 +30,11 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        WebContext context = new WebContext(req, resp, req.getServletContext());
-        User user = new User();
-        user.setFirstName((String) context.getSession().getAttribute("fname"));
-        user.setLastName((String) context.getSession().getAttribute("lname"));
-        user.setPassword((String) context.getSession().getAttribute("password"));
-        user.setUsername((String) context.getSession().getAttribute("username"));
-        user.setUserRole("ROLE_USER");
-        userService.save(user);
-        context.getSession().setAttribute("user", user);
-        resp.sendRedirect("/");
+        HttpSession session = req.getSession();
+        session.setAttribute("username", req.getParameter("username"));
+        session.setAttribute("password", req.getParameter("password"));
+        session.setAttribute("fname", req.getParameter("fname"));
+        session.setAttribute("lname", req.getParameter("lname"));
+        resp.sendRedirect("/login");
     }
 }
