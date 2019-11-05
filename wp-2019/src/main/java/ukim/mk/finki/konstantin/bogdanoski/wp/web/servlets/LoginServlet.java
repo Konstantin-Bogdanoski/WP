@@ -21,15 +21,18 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
         WebContext webContext = new WebContext(req, resp, req.getServletContext());
         this.springTemplateEngine.process("login.html", webContext, resp.getWriter());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         session.setAttribute("username", req.getParameter("username"));
         session.setAttribute("password", req.getParameter("password"));
-        resp.sendRedirect("/pizzas");
+        resp.sendRedirect("/");
     }
 }

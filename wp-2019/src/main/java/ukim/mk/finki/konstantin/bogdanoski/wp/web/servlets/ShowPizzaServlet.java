@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
@@ -21,15 +20,17 @@ import java.util.List;
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
-@WebServlet(urlPatterns = "/pizzas")
+@WebServlet(name = "index", urlPatterns = "")
 @AllArgsConstructor
-public class ShowPizza extends HttpServlet {
+public class ShowPizzaServlet extends HttpServlet {
     private final PizzaService pizzaService;
     private final UserService userService;
     private final SpringTemplateEngine springTemplateEngine;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();
         WebContext context = new WebContext(req, resp, req.getServletContext());
         List<Pizza> pizzas = pizzaService.findAll();

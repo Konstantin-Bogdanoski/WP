@@ -3,10 +3,8 @@ package ukim.mk.finki.konstantin.bogdanoski.wp.web.servlets;
 import lombok.AllArgsConstructor;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
-import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
+import ukim.mk.finki.konstantin.bogdanoski.wp.service.OrderService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
 import javax.servlet.ServletException;
@@ -14,17 +12,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-
-@SuppressWarnings("OptionalGetWithoutIsPresent")
-@WebServlet(urlPatterns = "/pizzaSize")
+@WebServlet(urlPatterns = "/admin")
 @AllArgsConstructor
-public class PizzaSizeServlet extends HttpServlet {
-    private PizzaService pizzaService;
+public class AdminServlet extends HttpServlet {
+    private UserService userService;
+    private OrderService orderService;
     private SpringTemplateEngine springTemplateEngine;
 
     @Override
@@ -32,9 +30,17 @@ public class PizzaSizeServlet extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(req, resp, req.getServletContext());
-        Pizza selectedPizza = pizzaService.findByName(req.getParameter("selectedPizza"));
-        req.getSession().setAttribute("selectedPizza", selectedPizza);
-        context.setVariable("selectedPizza", selectedPizza);
-        this.springTemplateEngine.process("selectPizzaSize.html", context, resp.getWriter());
+        HttpSession session = context.getSession();
+        User user = new User();
+
+        if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
+            user = userService.findByUsername((String) session.getAttribute("username")).get();
+
+        if (user.getUserRole().equals("ROLE_ADMIN")) {
+            context.setVariable("orders", orderService.findAll());
+            session.setAttribute("orders", orderService.findAll());
+            springTemplateEngine.process("admin.html", context, resp.getWriter());
+        } else
+            resp.sendError(404, "YOU ARE NOT ALLOWED TO BE HERE!");
     }
 }

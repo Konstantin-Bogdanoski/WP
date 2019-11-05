@@ -13,6 +13,8 @@ import java.io.IOException;
 public class LogoutServlet extends HttpServlet {
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         req.getSession().invalidate();
         resp.sendRedirect("/login");
     }

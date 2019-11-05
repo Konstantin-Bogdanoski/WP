@@ -38,6 +38,10 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    public void saveOrder(PizzaOrder order) {
+        orderList.add(order);
+    }
+
     public User(String username) {
         this.username = username;
     }

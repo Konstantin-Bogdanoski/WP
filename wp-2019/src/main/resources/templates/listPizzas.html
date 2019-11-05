@@ -15,6 +15,10 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
+        ul {
+            list-style-type: none;
+        }
     </style>
 </head>
 <body>
@@ -30,6 +34,7 @@
                 <input type="radio" th:name="selectedPizza" th:value="${pizza.name}">
                 <strong><label th:text="${pizza.name}"></label></strong> (<span th:text="${pizza.description}"></span>)
             </span>
+                <hr>
             </li>
         </ul>
         <button type="submit">Next step</button>

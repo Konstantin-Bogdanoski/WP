@@ -7,6 +7,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)

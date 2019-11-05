@@ -8,6 +8,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.OrderService;
+import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,10 +26,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ConfirmationInfo extends HttpServlet {
     private OrderService orderService;
+    private UserService userService;
     private SpringTemplateEngine springTemplateEngine;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         Long id = (Long) session.getAttribute("order");
@@ -37,6 +41,7 @@ public class ConfirmationInfo extends HttpServlet {
         context.setVariable("address", address);
         PizzaOrder order = orderService.findOne(id).get();
         order.setDateCreated(LocalDateTime.now());
+        order.setAddress(address);
         orderService.save(order);
 
         UserAgent userAgent = UserAgent.parseUserAgentString(req.getHeader("User-Agent"));
