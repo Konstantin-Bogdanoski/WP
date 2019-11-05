@@ -38,6 +38,10 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
+    public User(String username) {
+        this.username = username;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

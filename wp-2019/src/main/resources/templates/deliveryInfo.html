@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>WP lab - Delivery Info</title>
@@ -28,6 +28,17 @@
             margin: 0 1.5%;
             width: 30%;
         }
+
+        body {
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
     </style>
 </head>
 <body>
@@ -36,12 +47,12 @@
 </header>
 <section>
 
-    <form method="" action="">
-        <label for="clientName">Client Name:</label><br/>
-        <input type="text" id="clientName" name="clientName"/><br/>
+    <form method="get" th:action="@{/ConfirmationInfo.do}">
+        <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>
+        <br/>
         <label for="clientAddress">Delivery Address:</label><br/>
-        <textarea cols="40" rows="3" id="clientAddress" name="clientAddress"></textarea><br/>
-        <a href="/confirmationInfo.html">Submit</a>
+        <textarea cols="40" rows="3" id="clientAddress" name="address"></textarea><br/>
+        <button type="submit">Confirm</button>
     </form>
 
 </section>
@@ -55,11 +66,11 @@
 
         <tr>
             <td><b>Pizza Type </b></td>
-            <td>Margarita</td>
+            <td><span th:text="${selectedPizza.name}"></span></td>
         </tr>
         <tr>
             <td><b>Pizza Size </b></td>
-            <td>Large</td>
+            <td><span th:text="${size}"></span></td>
         </tr>
     </table>
 </aside>

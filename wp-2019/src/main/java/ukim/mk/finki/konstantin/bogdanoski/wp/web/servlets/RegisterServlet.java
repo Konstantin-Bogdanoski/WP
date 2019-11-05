@@ -11,8 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -20,6 +20,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/register")
 @AllArgsConstructor
 public class RegisterServlet extends HttpServlet {
+    private final UserService userService;
     private final SpringTemplateEngine springTemplateEngine;
 
     @Override
@@ -30,11 +31,33 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpSession session = req.getSession();
-        session.setAttribute("username", req.getParameter("username"));
-        session.setAttribute("password", req.getParameter("password"));
-        session.setAttribute("fname", req.getParameter("fname"));
-        session.setAttribute("lname", req.getParameter("lname"));
-        resp.sendRedirect("/login");
+        String username = req.getParameter("newusername");
+        String password = req.getParameter("newpassword");
+        String fname = req.getParameter("fname");
+        String lname = req.getParameter("lname");
+        String pathToRedirect = "";
+
+        if (username == null
+                || username.equals("")
+                || password == null
+                || password.equals("")
+                || fname == null
+                || fname.equals("")
+                || lname == null
+                || lname.equals(""))
+            pathToRedirect = "/register";
+        else {
+            User user = new User(username, password);
+            user.setUserRole("ROLE_USER");
+            user.setFirstName(fname);
+            user.setLastName(lname);
+            user.setDateCreated(LocalDateTime.now());
+            req.getSession().setAttribute("username", username);
+            req.getSession().setAttribute("password", password);
+            if (!userService.findByUsername(username).isPresent())
+                userService.save(user);
+            pathToRedirect = "/";
+        }
+        resp.sendRedirect(pathToRedirect);
     }
 }

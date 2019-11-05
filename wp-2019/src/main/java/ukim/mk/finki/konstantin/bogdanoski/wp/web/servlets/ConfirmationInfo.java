@@ -1,14 +1,13 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.servlets;
 
+import eu.bitwalker.useragentutils.UserAgent;
 import lombok.AllArgsConstructor;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring5.SpringTemplateEngine;
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.OrderService;
-import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
-import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,8 +24,6 @@ import java.time.LocalDateTime;
 @WebServlet(urlPatterns = "/ConfirmationInfo.do")
 @AllArgsConstructor
 public class ConfirmationInfo extends HttpServlet {
-    private PizzaService pizzaService;
-    private UserService userService;
     private OrderService orderService;
     private SpringTemplateEngine springTemplateEngine;
 
@@ -34,15 +31,26 @@ public class ConfirmationInfo extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
-        User user = userService.findOne((Long) session.getAttribute("username")).get();
-        Pizza pizza = pizzaService.findOne((Long) session.getAttribute("pizza")).get();
-        PizzaOrder order = orderService.findOne((Long) session.getAttribute("order")).get();
-        String size = order.getSize();
+        Long id = (Long) session.getAttribute("order");
+        String address = req.getParameter("address");
+        session.setAttribute("address", address);
+        context.setVariable("address", address);
+        PizzaOrder order = orderService.findOne(id).get();
         order.setDateCreated(LocalDateTime.now());
-        context.setVariable("username", user.getId());
-        context.setVariable("pizza", pizza.getId());
-        context.setVariable("order", order.getId());
-        context.setVariable("size", size);
+        orderService.save(order);
+
+        UserAgent userAgent = UserAgent.parseUserAgentString(req.getHeader("User-Agent"));
+
+        User user = (User) session.getAttribute("user");
+        Pizza selectedPizza = (Pizza) session.getAttribute("selectedPizza");
+        req.setAttribute("user", user);
+        req.setAttribute("selectedPizza", selectedPizza);
+        req.setAttribute("address", address);
+        req.setAttribute("order", order);
+        req.setAttribute("size", session.getAttribute("size"));
+        req.setAttribute("browser", userAgent.getBrowser().getName());
+        req.setAttribute("ip", req.getRemoteAddr());
+
         this.springTemplateEngine.process("confirmationInfo.html", context, resp.getWriter());
     }
 }

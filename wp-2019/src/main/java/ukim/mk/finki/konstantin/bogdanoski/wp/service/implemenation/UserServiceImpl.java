@@ -6,6 +6,8 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.UserRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
+import java.util.Optional;
+
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
@@ -24,10 +26,7 @@ public class UserServiceImpl extends BaseEntityCrudServiceImpl<User, UserReposit
     }
 
     @Override
-    public User findByUsername(String username) {
-        if (repository.findByUsername(username).isPresent())
-            return repository.findByUsername(username).get();
-        else
-            throw new UserNotFoundException();
+    public Optional<User> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 }

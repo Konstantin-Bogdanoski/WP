@@ -1,6 +1,5 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.filters;
 
-import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
 import javax.servlet.*;
@@ -12,6 +11,7 @@ import java.io.IOException;
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @WebFilter
 public class LoginFilter implements Filter {
 
@@ -34,8 +34,8 @@ public class LoginFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
 
         boolean flag = false;
-        if (!(username == null || username.isEmpty()))
-            flag = userService.findAll().contains(new User(username, password));
+        if (!(username == null || username.isEmpty()) && !(password == null || password.isEmpty()))
+            flag = userService.findByUsername(username).get().getPassword().equals(password);
         if (!"/login".equals(path) && !flag)
             response.sendRedirect("/login");
         else

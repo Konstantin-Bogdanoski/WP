@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>Pizza Order page - Pizza Size</title>
@@ -6,6 +6,14 @@
         body {
             width: 800px;
             margin: auto;
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         table {
@@ -28,6 +36,7 @@
             margin: 0 1.5%;
             width: 30%;
         }
+
     </style>
 </head>
 <body>
@@ -36,12 +45,13 @@
 </header>
 <section>
     <h2>Choose pizza size:</h2>
-    <input type="radio" name="pizza_size" value="Small"> Small <br/>
-    <input type="radio" name="pizza_size" value="Medium"> Medium <br/>
-    <input type="radio" name="pizza_size" value="Big"> Big <br/>
-    <input type="radio" name="pizza_size" value="Family"> Family <br/>
-    <br/>
-    <a href="/deliveryInfo.html">Submit</a>
+    <form th:action="@{/PizzaOrder.do}" method="get">
+        <input type="radio" name="size" value="Small"> Small <br/>
+        <input type="radio" name="size" value="Medium"> Medium <br/>
+        <input type="radio" name="size" value="Big"> Big <br/>
+        <input type="radio" name="size" value="Family"> Family <br/>
+        <button type="submit">Next step</button>
+    </form>
 </section>
 <aside>
     <table>
@@ -52,7 +62,7 @@
         </tr>
         <tr>
             <td><b>Pizza Type </b></td>
-            <td>Margarita</td>
+            <td><span th:text="${selectedPizza.name}"></span></td>
         </tr>
     </table>
 </aside>

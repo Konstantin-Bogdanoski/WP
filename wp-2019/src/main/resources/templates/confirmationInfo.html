@@ -1,8 +1,9 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>WP lab - Confirmation Info</title>
     <style type="text/css">
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
         body {
             width: 800px;
             margin: auto;
@@ -16,6 +17,37 @@
             border: 1px solid black;
             padding: 3px 2px;
         }
+
+        body {
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .form button {
+            font-family: "Roboto", sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: #4CAF50;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+        .form button:hover, .form button:active, .form button:focus {
+            background: #43A047;
+        }
+
     </style>
 </head>
 <body>
@@ -31,32 +63,37 @@
         </tr>
         <tr>
             <td><b>Client Name </b></td>
-            <td>Petko Petkov</td>
+            <td><span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span></td>
         </tr>
         <tr>
             <td><b>Client Address </b></td>
-            <td>Partizanska 5, Skopje</td>
+            <td><span th:text="${address}"></span></td>
         </tr>
         <tr>
             <td><b>Client IP Address</b></td>
-            <td>127.0.0.1</td>
+            <td><span th:text="${ip}"></span></td>
         </tr>
         <tr>
             <td><b>Client Browser</b></td>
-            <td>Mozilla</td>
+            <td><span th:text="${browser}"></span></td>
         </tr>
         <tr>
             <td><b>Pizza Type </b></td>
-            <td>Margarita</td>
+            <td><span th:text="${selectedPizza.name}"></span></td>
         </tr>
         <tr>
             <td><b>Pizza Size </b></td>
-            <td>Large</td>
+            <td><span th:text="${order.size}"></span></td>
+        </tr>
+        <tr>
+            <td><b>Order no. </b></td>
+            <td><span th:text="${order.Id}"></span></td>
         </tr>
     </table>
-    <div>
-        <a href="/">Log out</a>
-    </div>
+    <br/>
+    <form action="/logout">
+        <button>Log out</button>
+    </form>
 </section>
 </body>
 </html>

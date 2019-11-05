@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <title>Pizza Order page - Welcome and choose pizza</title>
@@ -6,6 +6,14 @@
         body {
             width: 800px;
             margin: auto;
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
     </style>
 </head>
@@ -15,21 +23,18 @@
 </header>
 <main>
     <h2>Choose pizza:</h2>
-    <input type="radio" name="pizza" value="Margherita"> Margherita (tomato sauce, mozzarella)<br/>
-    <input type="radio" name="pizza" value="Carbonara"> Carbonara (fresh cream, mozzarella, bacon)<br/>
-    <input type="radio" name="pizza" value="Vegetariana"> Vegetariana (tomato sauce, mushrooms)<br/>
-    <input type="radio" name="pizza" value="Calzone"> Calzone (Pizza dough, ricotta, pepperoni, pizza sauce, olive oil)
+    <form method="get" th:action="@{/pizzaSize}">
+        <ul>
+            <li th:each="pizza : ${pizzas}">
+            <span>
+                <input type="radio" th:name="selectedPizza" th:value="${pizza.name}">
+                <strong><label th:text="${pizza.name}"></label></strong> (<span th:text="${pizza.description}"></span>)
+            </span>
+            </li>
+        </ul>
+        <button type="submit">Next step</button>
+    </form>
     <br/>
-    <input type="radio" name="pizza" value="Cheddar"> Cheddar (cheddar, tomato sauce) <br/>
-    <input type="radio" name="pizza" value="Capricciosa"> Capricciosa (tomato sauce, cheese, ham) <br/>
-    <input type="radio" name="pizza" value="Burger Classic"> Burger Classic (barbecue sauce, beef, mozzarella,
-    onions)<br/>
-    <input type="radio" name="pizza" value="Boston Barbecue"> Burger Barbecue (ham, chicken meat, onions)<br/>
-    <input type="radio" name="pizza" value="Vegie Vulcano"> Pepperoni (tomato sauce, mozzarella, sausage) <br/>
-    <input type="radio" name="pizza" value="Boston Barbecue"> Quattro Formaggi (Taleggio, Mascarpone, Gorgonzola,
-    Parmesan) <br/>
-    <br/>
-    <a href="/selectPizzaSize.html">Submit</a>
 </main>
 </body>
 </html>

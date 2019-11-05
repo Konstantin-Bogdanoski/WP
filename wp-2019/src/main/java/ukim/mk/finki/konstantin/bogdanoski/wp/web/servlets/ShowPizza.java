@@ -20,7 +20,8 @@ import java.util.List;
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-@WebServlet(urlPatterns = "/")
+@SuppressWarnings("OptionalGetWithoutIsPresent")
+@WebServlet(urlPatterns = "/pizzas")
 @AllArgsConstructor
 public class ShowPizza extends HttpServlet {
     private final PizzaService pizzaService;
@@ -32,8 +33,9 @@ public class ShowPizza extends HttpServlet {
         HttpSession session = req.getSession();
         WebContext context = new WebContext(req, resp, req.getServletContext());
         List<Pizza> pizzas = pizzaService.findAll();
-        context.setVariable("username", userService.findByUsername((String) session.getAttribute("username")).getId());
+        context.setVariable("username", userService.findByUsername((String) session.getAttribute("username")).get().getUsername());
         context.setVariable("pizzas", pizzas);
+        session.setAttribute("user", userService.findByUsername((String) session.getAttribute("username")).get());
         this.springTemplateEngine.process("listPizzas.html", context, resp.getWriter());
     }
 }
