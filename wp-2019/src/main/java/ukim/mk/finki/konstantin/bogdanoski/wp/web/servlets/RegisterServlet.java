@@ -39,29 +39,16 @@ public class RegisterServlet extends HttpServlet {
         String password = req.getParameter("newpassword");
         String fname = req.getParameter("fname");
         String lname = req.getParameter("lname");
-        String pathToRedirect = "";
 
-        if (username == null
-                || username.equals("")
-                || password == null
-                || password.equals("")
-                || fname == null
-                || fname.equals("")
-                || lname == null
-                || lname.equals(""))
-            pathToRedirect = "/register";
-        else {
-            User user = new User(username, password);
-            user.setUserRole("ROLE_USER");
-            user.setFirstName(fname);
-            user.setLastName(lname);
-            user.setDateCreated(LocalDateTime.now());
-            req.getSession().setAttribute("username", username);
-            req.getSession().setAttribute("password", password);
-            if (!userService.findByUsername(username).isPresent())
-                userService.save(user);
-            pathToRedirect = "/";
-        }
-        resp.sendRedirect(pathToRedirect);
+        User user = new User(username, password);
+        user.setUserRole("ROLE_USER");
+        user.setFirstName(fname);
+        user.setLastName(lname);
+        user.setDateCreated(LocalDateTime.now());
+        req.getSession().setAttribute("username", username);
+        req.getSession().setAttribute("password", password);
+        if (!userService.findByUsername(username).isPresent())
+            userService.save(user);
+        resp.sendRedirect("/login");
     }
 }
