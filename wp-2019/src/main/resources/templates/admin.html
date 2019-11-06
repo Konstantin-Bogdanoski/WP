@@ -5,6 +5,18 @@
     <title>Pizza Delizziosso</title>
     <!-- @author Konstantin Bogdanoski (konstantin.b@live.com) -->
     <style>
+
+        body {
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #76b852, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         table {
             border: 1px solid #ccc;
             border-collapse: collapse;
@@ -85,6 +97,13 @@
                 border-bottom: 0;
             }
         }
+
+        .button-success {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            background: rgb(28, 184, 65); /* this is a green */
+        }
     </style>
 </head>
 <body>
@@ -93,18 +112,28 @@
     <thead>
     <tr>
         <th>Order ID</th>
-        <th>Order Date</th>
+        <th>Order Customer</th>
+        <th>Order Pizza</th>
+        <th>Order Size</th>
         <th>Order Address</th>
     </tr>
     </thead>
     <tr th:each="order : ${orders}">
         <td th:text="${order.id}">
         </td>
-        <td th:text="${order.dateCreated}">
+        <td>
+            <span th:text="${order.user.firstName}"></span>
+            <span th:text="${order.user.lastName}"></span>
         </td>
+        <td th:text="${order.pizza.name}">
+        </td>
+        <td th:text="${order.size}"></td>
         <td th:text="${order.address}">
         </td>
     </tr>
 </table>
+<form method="get" action="/">
+    <button type="submit" class="button-success">Home Page</button>
+</form>
 </body>
 </html>

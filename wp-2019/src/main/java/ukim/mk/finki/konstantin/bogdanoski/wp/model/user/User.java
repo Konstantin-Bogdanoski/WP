@@ -6,6 +6,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -26,20 +27,15 @@ public class User extends BaseEntity {
     private String password;
     private String userRole;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<PizzaOrder> orderList;
 
     public User() {
-        orderList = new ArrayList<>();
     }
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public void saveOrder(PizzaOrder order) {
-        orderList.add(order);
     }
 
     public User(String username) {

@@ -64,12 +64,12 @@
 <body>
 <header>
     <h1>Pizza Delizzioso - Delivery information </h1>
+    <span>Signed in as:</span><strong>
+    <span th:text="${user.firstName}"></span>
+    <span th:text="${user.lastName}"></span></strong>
 </header>
 <section>
-
     <form method="get" th:action="@{/ConfirmationInfo.do}">
-        <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>
-        <br/>
         <label for="clientAddress">Delivery Address:</label><br/>
         <textarea cols="40" rows="3" id="clientAddress" name="address" required></textarea><br/>
         <button type="submit" class="button-success">Confirm</button>

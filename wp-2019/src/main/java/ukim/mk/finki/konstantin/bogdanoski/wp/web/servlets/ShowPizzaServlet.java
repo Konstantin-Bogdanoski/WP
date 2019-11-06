@@ -39,6 +39,7 @@ public class ShowPizzaServlet extends HttpServlet {
         List<Pizza> pizzas = pizzaService.findAll();
         context.setVariable("username", userService.findByUsername((String) session.getAttribute("username")).get().getUsername());
         context.setVariable("pizzas", pizzas);
+        context.setVariable("user", userService.findByUsername((String) session.getAttribute("username")).get());
         session.setAttribute("user", userService.findByUsername((String) session.getAttribute("username")).get());
         this.springTemplateEngine.process("listPizzas.html", context, resp.getWriter());
     }

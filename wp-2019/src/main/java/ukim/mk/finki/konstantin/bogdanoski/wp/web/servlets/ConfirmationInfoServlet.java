@@ -38,7 +38,6 @@ public class ConfirmationInfoServlet extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
-        Long id = (Long) session.getAttribute("order");
         String address = req.getParameter("address");
         session.setAttribute("address", address);
         context.setVariable("address", address);

@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-@SuppressWarnings("OptionalGetWithoutIsPresent")
 @WebFilter
 @AllArgsConstructor
 public class LoginFilter implements Filter {
@@ -37,7 +36,8 @@ public class LoginFilter implements Filter {
         else {
             boolean flag = false;
             if (!(username == null || username.isEmpty()) && !(password == null || password.isEmpty()))
-                flag = userService.findByUsername(username).get().getPassword().equals(password);
+                if (userService.findByUsername(username).isPresent())
+                    flag = userService.findByUsername(username).get().getPassword().equals(password);
             if (!"/login".equals(path) && !flag)
                 response.sendRedirect("/login");
             else

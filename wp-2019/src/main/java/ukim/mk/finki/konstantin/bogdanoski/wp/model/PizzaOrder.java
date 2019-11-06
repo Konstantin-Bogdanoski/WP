@@ -5,8 +5,7 @@ import lombok.Setter;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
@@ -17,9 +16,14 @@ import java.time.LocalDateTime;
 @Setter
 public class PizzaOrder extends BaseEntity {
     @OneToOne
+    @JoinColumn
     private Pizza pizza;
+
     private String size;
-    @OneToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn
     private User user;
+
     private String address;
 }

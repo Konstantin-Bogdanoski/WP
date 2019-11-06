@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 public class PizzaSizeServlet extends HttpServlet {
     private final PizzaService pizzaService;
     private final SpringTemplateEngine springTemplateEngine;
+    private final UserService userService;
     private final Logger logger;
 
     @Override
@@ -42,6 +43,7 @@ public class PizzaSizeServlet extends HttpServlet {
             selectedPizza = pizzaService.findByName(req.getParameter("selectedPizza"));
         req.getSession().setAttribute("selectedPizza", selectedPizza);
         context.setVariable("selectedPizza", selectedPizza);
+        context.setVariable("user", (User) req.getSession().getAttribute("user"));
         this.springTemplateEngine.process("selectPizzaSize.html", context, resp.getWriter());
     }
 }

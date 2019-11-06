@@ -39,6 +39,7 @@ public class PizzaListener implements ServletContextListener,
          (the Web application) is undeployed or 
          Application Server shuts down.
       */
+        logger.info("\u001B[1m\u001B[31mWeb context has been destroyed\u001B[0m");
     }
 
     // -------------------------------------------------------

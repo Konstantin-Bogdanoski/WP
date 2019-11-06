@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -21,12 +22,14 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/admin")
 @AllArgsConstructor
 public class AdminServlet extends HttpServlet {
-    private UserService userService;
-    private OrderService orderService;
-    private SpringTemplateEngine springTemplateEngine;
+    private final UserService userService;
+    private final OrderService orderService;
+    private final SpringTemplateEngine springTemplateEngine;
+    private final Logger logger;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("\u001B[33mGET method CALLED from Admin Servlet\u001B[0m");
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(req, resp, req.getServletContext());
