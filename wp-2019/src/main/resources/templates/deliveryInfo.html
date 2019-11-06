@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>WP lab - Delivery Info</title>
+    <title>Pizza Delizzioso</title>
     <style type="text/css">
         body {
             width: 800px;
@@ -39,11 +39,31 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+
+        .button-success,
+        .button-error,
+        .button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
     </style>
 </head>
 <body>
 <header>
-    <h1>Pizza Order page - Delivery information </h1>
+    <h1>Pizza Delizzioso - Delivery information </h1>
 </header>
 <section>
 
@@ -51,8 +71,15 @@
         <span th:text="${user.firstName}"></span> <span th:text="${user.lastName}"></span>
         <br/>
         <label for="clientAddress">Delivery Address:</label><br/>
-        <textarea cols="40" rows="3" id="clientAddress" name="address"></textarea><br/>
-        <button type="submit">Confirm</button>
+        <textarea cols="40" rows="3" id="clientAddress" name="address" required></textarea><br/>
+        <button type="submit" class="button-success">Confirm</button>
+    </form>
+    <form action="/pizzaSize" method="get" style="display: inline-block">
+        <input type="hidden" name="selectedPizza" th:value="${selectedPizza.name}">
+        <button class="button-secondary">Choose Pizza Size</button>
+    </form>
+    <form action="/logout" style="display: inline-block">
+        <button class="button-error">Log out</button>
     </form>
 
 </section>

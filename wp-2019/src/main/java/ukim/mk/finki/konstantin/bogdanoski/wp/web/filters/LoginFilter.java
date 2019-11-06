@@ -1,5 +1,6 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.filters;
 
+import lombok.AllArgsConstructor;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
 import javax.servlet.*;
@@ -7,22 +8,22 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 @SuppressWarnings("OptionalGetWithoutIsPresent")
 @WebFilter
+@AllArgsConstructor
 public class LoginFilter implements Filter {
 
-    private UserService userService;
-
-    public LoginFilter(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
+    private final Logger logger;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        logger.info("\u001B[35mDoFILTER method CALLED from Login Filter\u001B[0m");
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 

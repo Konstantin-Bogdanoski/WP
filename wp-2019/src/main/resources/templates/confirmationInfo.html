@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>WP lab - Confirmation Info</title>
+    <title>Pizza Delizzioso</title>
     <style type="text/css">
         @import url(https://fonts.googleapis.com/css?family=Roboto:300);
         body {
@@ -29,23 +29,19 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        .form button {
-            font-family: "Roboto", sans-serif;
-            text-transform: uppercase;
-            outline: 0;
-            background: #4CAF50;
-            width: 100%;
-            border: 0;
-            padding: 15px;
-            color: #FFFFFF;
-            font-size: 14px;
-            -webkit-transition: all 0.3 ease;
-            transition: all 0.3 ease;
-            cursor: pointer;
+        .button-success,
+        .button-error {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
         }
 
-        .form button:hover, .form button:active, .form button:focus {
-            background: #43A047;
+        .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
         }
 
     </style>
@@ -53,7 +49,7 @@
 <body>
 <section>
     <header>
-        <h1>Pizza Order page - Order confirmation </h1>
+        <h1>Pizza Delizzioso - Order confirmation </h1>
     </header>
     <table>
         <tr>
@@ -91,8 +87,11 @@
         </tr>
     </table>
     <br/>
-    <form action="/logout">
-        <button>Log out</button>
+    <form action="/" style="display: inline-block">
+        <button class="button-success">New Order</button>
+    </form>
+    <form action="/logout" style="display: inline-block">
+        <button class="button-error">Log out</button>
     </form>
 </section>
 </body>

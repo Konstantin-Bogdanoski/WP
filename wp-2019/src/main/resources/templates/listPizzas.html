@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>Pizza Order page - Welcome and choose pizza</title>
+    <title>Pizza Delizzioso - Welcome and choose pizza</title>
     <style type="text/css">
         body {
             width: 800px;
@@ -19,6 +19,21 @@
         ul {
             list-style-type: none;
         }
+
+        .button-success,
+        .button-error {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
     </style>
 </head>
 <body>
@@ -31,13 +46,16 @@
         <ul>
             <li th:each="pizza : ${pizzas}">
             <span>
-                <input type="radio" th:name="selectedPizza" th:value="${pizza.name}">
+                <input type="radio" th:name="selectedPizza" th:value="${pizza.name}" required/>
                 <strong><label th:text="${pizza.name}"></label></strong> (<span th:text="${pizza.description}"></span>)
             </span>
                 <hr>
             </li>
         </ul>
-        <button type="submit">Next step</button>
+        <button type="submit" class="button-success">Next step</button>
+    </form>
+    <form action="/logout" style="display: inline-block">
+        <button class="button-error">Log out</button>
     </form>
     <br/>
 </main>

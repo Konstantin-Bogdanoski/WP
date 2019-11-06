@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -26,9 +27,11 @@ public class ShowPizzaServlet extends HttpServlet {
     private final PizzaService pizzaService;
     private final UserService userService;
     private final SpringTemplateEngine springTemplateEngine;
+    private final Logger logger;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("\u001B[33mGET method CALLED from ShowPizza Servlet\u001B[0m");
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
         HttpSession session = req.getSession();

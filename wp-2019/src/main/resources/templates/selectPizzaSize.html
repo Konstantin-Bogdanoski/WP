@@ -1,7 +1,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
-    <title>Pizza Order page - Pizza Size</title>
+    <title>Pizza Delizzioso - Pizza Size</title>
     <style type="text/css">
         body {
             width: 800px;
@@ -37,6 +37,25 @@
             width: 30%;
         }
 
+        .button-success,
+        .button-error,
+        .button-secondary {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
     </style>
 </head>
 <body>
@@ -46,11 +65,17 @@
 <section>
     <h2>Choose pizza size:</h2>
     <form th:action="@{/PizzaOrder.do}" method="get">
-        <input type="radio" name="size" value="Small"> Small <br/>
+        <input type="radio" name="size" value="Small" required> Small <br/>
         <input type="radio" name="size" value="Medium"> Medium <br/>
         <input type="radio" name="size" value="Big"> Big <br/>
         <input type="radio" name="size" value="Family"> Family <br/>
-        <button type="submit">Next step</button>
+        <button type="submit" class="button-success">Next step</button>
+    </form>
+    <form action="/" style="display: inline-block">
+        <button class="button-secondary">Choose Pizza</button>
+    </form>
+    <form action="/logout" style="display: inline-block">
+        <button class="button-error">Log out</button>
     </form>
 </section>
 <aside>

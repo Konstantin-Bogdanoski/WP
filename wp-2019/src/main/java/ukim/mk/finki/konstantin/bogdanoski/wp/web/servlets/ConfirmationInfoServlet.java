@@ -18,19 +18,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 @WebServlet(urlPatterns = "/ConfirmationInfo.do")
 @AllArgsConstructor
-public class ConfirmationInfo extends HttpServlet {
-    private OrderService orderService;
-    private UserService userService;
-    private SpringTemplateEngine springTemplateEngine;
+public class ConfirmationInfoServlet extends HttpServlet {
+    private final OrderService orderService;
+    private final UserService userService;
+    private final SpringTemplateEngine springTemplateEngine;
+    private final Logger logger;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("\u001B[33mGET method CALLED from ConfirmationInfo Servlet\u001B[0m");
         resp.setContentType("text/html; charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
         WebContext context = new WebContext(req, resp, req.getServletContext());
@@ -39,9 +42,13 @@ public class ConfirmationInfo extends HttpServlet {
         String address = req.getParameter("address");
         session.setAttribute("address", address);
         context.setVariable("address", address);
-        PizzaOrder order = orderService.findOne(id).get();
-        order.setDateCreated(LocalDateTime.now());
+        PizzaOrder order = new PizzaOrder();
+
         order.setAddress(address);
+        order.setUser((User) session.getAttribute("user"));
+        order.setPizza((Pizza) session.getAttribute("selectedPizza"));
+        order.setSize((String) session.getAttribute("size"));
+        order.setDateCreated(LocalDateTime.now());
         orderService.save(order);
 
         UserAgent userAgent = UserAgent.parseUserAgentString(req.getHeader("User-Agent"));

@@ -127,10 +127,10 @@
 <div class="login-page">
     <div class="form">
         <form class="login-form" method="post" action="/register">
-            <input name="newusername" type="text" placeholder="username"/>
-            <input name="fname" type="text" placeholder="first name"/>
-            <input name="lname" type="text" placeholder="last name"/>
-            <input name="newpassword" type="password" placeholder="password"/>
+            <input name="newusername" type="text" placeholder="username" required/>
+            <input name="fname" type="text" placeholder="first name" required/>
+            <input name="lname" type="text" placeholder="last name" required/>
+            <input name="newpassword" type="password" placeholder="password" required/>
             <button type="submit">Register</button>
             <p class="message">Already registered? <a href="/login">Sign In</a></p>
         </form>
