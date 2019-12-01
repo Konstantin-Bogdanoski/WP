@@ -15,13 +15,9 @@ import java.util.logging.Logger;
 @ServletComponentScan
 public class WpApplication {
 
-    private static Logger logger;
-
     @Bean
     public Logger Logger() {
-        logger = Logger.getLogger(WpApplication.class.getName());
-        ;
-        return logger;
+        return Logger.getLogger(WpApplication.class.getName());
     }
 
     public static void main(String[] args) {

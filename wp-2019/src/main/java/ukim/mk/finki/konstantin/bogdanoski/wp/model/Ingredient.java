@@ -5,8 +5,7 @@ import lombok.Setter;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import java.util.List;
+import javax.persistence.ManyToOne;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -14,9 +13,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Pizza extends BaseEntity {
+public class Ingredient extends BaseEntity {
     private String name;
-    private String description;
-    @OneToMany(mappedBy = "pizza")
-    private List<Ingredient> ingredientList;
+    private boolean spicy;
+    private float amount;
+    private boolean veggie;
+    @ManyToOne
+    private Pizza pizza;
 }
