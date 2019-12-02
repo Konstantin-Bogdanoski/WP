@@ -22,7 +22,6 @@ public class PizzaOrder extends BaseEntity {
     private String size;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn
     private User user;
 
     private String address;

@@ -1,10 +1,12 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
 public class Pizza extends BaseEntity {
     private String name;
     private String description;
+    private boolean veggie;
     @OneToMany(mappedBy = "pizza")
-    private List<Ingredient> ingredientList;
+    private List<PizzaIngredient> pizzaIngredients;
 }

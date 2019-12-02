@@ -1,7 +1,7 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.service.implemenation;
 
 import org.springframework.stereotype.Service;
-import ukim.mk.finki.konstantin.bogdanoski.wp.exceptions.PizzaNotFoundException;
+import ukim.mk.finki.konstantin.bogdanoski.wp.exception.PizzaNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.PizzaRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;

@@ -1,7 +1,6 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.service.implemenation;
 
 import org.springframework.stereotype.Service;
-import ukim.mk.finki.konstantin.bogdanoski.wp.exceptions.UserNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.UserRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;

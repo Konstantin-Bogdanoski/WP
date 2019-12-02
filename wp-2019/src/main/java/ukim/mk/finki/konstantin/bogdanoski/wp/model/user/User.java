@@ -19,7 +19,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "PizzaUser")
+@Table(name = "pizza_user")
 public class User extends BaseEntity {
     private String username;
     private String firstName;
@@ -27,7 +27,7 @@ public class User extends BaseEntity {
     private String password;
     private String userRole;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<PizzaOrder> orderList;
 
     public User() {
@@ -40,18 +40,5 @@ public class User extends BaseEntity {
 
     public User(String username) {
         this.username = username;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return getUsername().equals(user.getUsername());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUsername());
     }
 }
