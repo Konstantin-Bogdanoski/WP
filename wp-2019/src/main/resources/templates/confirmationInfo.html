@@ -45,11 +45,27 @@
         }
 
     </style>
+    <script>
+        function logout(form) {
+            return confirm("Are you sure you want to logout");
+        }
+    </script>
 </head>
 <body>
 <section>
     <header>
-        <h1>Pizza Delizzioso - Order confirmation </h1>
+        <h1>Order Confirmation</h1>
+        <span>Signed in as:</span><strong>
+        <span th:text="${user.firstName}"></span>
+        <span th:text="${user.lastName}"></span></strong>
+        <button th:if="${user.userRole == 'ROLE_ADMIN'}" onclick="location.href='/admin'" class="button-success">Admin
+            Page
+        </button>
+        <form style="display: inline-block" method="get" action="/logout" onsubmit="return logout(this)">
+            <button type="submit" class="button-error">Log out</button>
+        </form>
+        <!-- NOT ALLOWED DUE TO LOGIC -->
+        <!--<button class="button-error" onclick="location.href='/delete'">Delete your orders</button>-->
     </header>
     <table>
         <tr>
@@ -89,9 +105,6 @@
     <br/>
     <form action="/" style="display: inline-block">
         <button class="button-success">New Order</button>
-    </form>
-    <form action="/logout" style="display: inline-block">
-        <button class="button-error">Log out</button>
     </form>
 </section>
 </body>

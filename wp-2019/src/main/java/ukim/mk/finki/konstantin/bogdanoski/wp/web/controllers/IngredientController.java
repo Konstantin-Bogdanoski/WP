@@ -1,6 +1,9 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientAlreadyExistsException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.NoMoreSpicyIngredientsException;
@@ -30,32 +33,37 @@ public class IngredientController {
     }
 
     @PostMapping
-    public void addIngredient(@ModelAttribute Ingredient ingredient) {
+    public ModelAndView addIngredient(@ModelAttribute Ingredient ingredient, ModelMap model) {
         ingredientService.findAll().forEach(ing -> {
             if (ing.getName().equals(ingredient.getName()))
                 throw new IngredientAlreadyExistsException();
         });
-        if (ingredientService.findAll().stream().map(Ingredient::isSpicy).count() >= 4)
+        if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
             throw new NoMoreSpicyIngredientsException();
         ingredient.setDateCreated(LocalDateTime.now());
         ingredientService.save(ingredient);
+        return new ModelAndView("redirect:/admin/ingredients", model);
     }
 
     @PatchMapping("/{id}")
-    public void editIngredient(@PathVariable Long id, @ModelAttribute Ingredient ingredient) {
-        ingredient.setId(id);
-        if (ingredientService.findOne(id).isPresent())
-            ingredientService.save(ingredient);
-        else
+    public ModelAndView editIngredient(@PathVariable Long id, @ModelAttribute(name = "newIngredient") Ingredient newIngredient, ModelMap model) {
+        newIngredient.setId(id);
+        if (ingredientService.findOne(id).isPresent()) {
+            if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
+                throw new NoMoreSpicyIngredientsException();
+            ingredientService.save(newIngredient);
+        } else
             throw new IngredientNotFoundException();
+        return new ModelAndView("redirect:/admin/ingredients", model);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteIngredient(@PathVariable Long id) {
+    public ModelAndView deleteIngredient(@PathVariable Long id, ModelMap model) {
         if (ingredientService.findOne(id).isPresent())
             ingredientService.delete(id);
         else
             throw new IngredientNotFoundException();
+        return new ModelAndView("redirect:/admin/ingredients", model);
     }
 
     @GetMapping

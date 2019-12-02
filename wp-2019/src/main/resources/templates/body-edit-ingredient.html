@@ -1,0 +1,26 @@
+<style xmlns:th="http://www.w3.org/1999/xhtml">
+    body {
+        text-align: center;
+    }
+
+    #form {
+        padding: 50px;
+        margin: 50px;
+        border: 2px solid black;
+        display: inline-block;
+        background: navajowhite;
+    }
+</style>
+<form id="form" action="#" th:action="@{/ingredients/} + ${ingredient.id}" th:object="${ingredient}" method="post">
+    <h2>Edit Ingredient</h2>
+    <input type="hidden" name="ingredientID" th:value="${ingredient.id}">
+    <input type="hidden" name="_method" value="PATCH"/>
+    <label for="name">Name</label>
+    <input id="name" th:field="*{name}" th:value="${ingredient.name}" type="text"><br><br>
+    <label for="spicy">Spicy?</label>
+    <input id="spicy" th:field="*{spicy}" th:checked="${ingredient.spicy}" type="checkbox">
+    <label for="veggie">Veggie?</label>
+    <input id="veggie" th:field="*{veggie}" th:checked="${ingredient.veggie}" type="checkbox"><br><br>
+    <hr>
+    <button type="submit">Change</button>
+</form>

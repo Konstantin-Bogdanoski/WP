@@ -1,0 +1,24 @@
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Order Customer</th>
+        <th>Order Pizza</th>
+        <th>Order Size</th>
+        <th>Order Address</th>
+    </tr>
+    </thead>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}">
+        </td>
+        <td>
+            <span th:text="${order.user.firstName}"></span>
+            <span th:text="${order.user.lastName}"></span>
+        </td>
+        <td th:text="${order.pizza.name}">
+        </td>
+        <td th:text="${order.size}"></td>
+        <td th:text="${order.address}">
+        </td>
+    </tr>
+</table>

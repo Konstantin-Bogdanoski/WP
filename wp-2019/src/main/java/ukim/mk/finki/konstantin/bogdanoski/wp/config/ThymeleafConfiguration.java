@@ -10,7 +10,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-@Configuration
+//@Configuration
 public class ThymeleafConfiguration {
     private final ApplicationContext applicationContext;
 
@@ -29,7 +29,7 @@ public class ThymeleafConfiguration {
         return templateResolver;
     }
 
-    @Bean
+    //@Bean
     public SpringTemplateEngine getSpringTemplateEngine() {
         final SpringTemplateEngine springTemplateEngine = new SpringTemplateEngine();
         springTemplateEngine.addTemplateResolver(templateResolver());

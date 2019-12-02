@@ -5,7 +5,6 @@
     <title>Pizza Delizziosso</title>
     <!-- @author Konstantin Bogdanoski (konstantin.b@live.com) -->
     <style>
-
         body {
             background: #76b852; /* fallback for old browsers */
             background: -webkit-linear-gradient(right, #76b852, #8DC26F);
@@ -15,14 +14,18 @@
             font-family: "Roboto", sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            width: 100%;
+            margin: 0px;
+            padding: 0px;
         }
 
         table {
             border: 1px solid #ccc;
             border-collapse: collapse;
-            margin: 0;
+            margin: 0 auto;
             padding: 0;
-            width: 100%;
+            width: 80%;
+            text-align: center;
             table-layout: fixed;
         }
 
@@ -32,8 +35,8 @@
         }
 
         table tr {
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
+            background-color: navajowhite;
+            border: 1px solid darkolivegreen;
             padding: .35em;
         }
 
@@ -70,13 +73,13 @@
             }
 
             table tr {
-                border-bottom: 3px solid #ddd;
+                border-bottom: 3px solid darkolivegreen;
                 display: block;
                 margin-bottom: .625em;
             }
 
             table td {
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid darkolivegreen;
                 display: block;
                 font-size: .8em;
                 text-align: right;
@@ -98,42 +101,65 @@
             }
         }
 
-        .button-success {
+        .button-success,
+        .button-error,
+        .button-secondary {
             color: white;
             border-radius: 4px;
             text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-success {
             background: rgb(28, 184, 65); /* this is a green */
         }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
+
+        form {
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+        }
+
+        main {
+            text-align: center;
+            background: navajowhite;
+            border: darkolivegreen solid 10px;
+        }
     </style>
+    <script>
+        function logout(form) {
+            return confirm("Are you sure you want to logout");
+        }
+    </script>
 </head>
 <body>
-<h1>ADMIN PAGE</h1>
-<table>
-    <thead>
-    <tr>
-        <th>Order ID</th>
-        <th>Order Customer</th>
-        <th>Order Pizza</th>
-        <th>Order Size</th>
-        <th>Order Address</th>
-    </tr>
-    </thead>
-    <tr th:each="order : ${orders}">
-        <td th:text="${order.id}">
-        </td>
-        <td>
-            <span th:text="${order.user.firstName}"></span>
-            <span th:text="${order.user.lastName}"></span>
-        </td>
-        <td th:text="${order.pizza.name}">
-        </td>
-        <td th:text="${order.size}"></td>
-        <td th:text="${order.address}">
-        </td>
-    </tr>
-</table>
-<form method="get" action="/">
-    <button type="submit" class="button-success">Home Page</button>
-</form>
+<main>
+    <h1>ADMIN PAGE</h1><br>
+    <form method="get" action="/admin">
+        <button type="submit" class="button-success">Admin Page</button>
+    </form>
+    <form method="get" action="/">
+        <button type="submit" class="button-success">Home Page</button>
+    </form>
+    <form method="get" action="/admin/ingredients">
+        <button type="submit" class="button-success">Ingredients Page</button>
+    </form>
+    <form method="get" action="/admin/addIngredient">
+        <button type="submit" class="button-success">Add Ingredient</button>
+    </form>
+    <form method="get" action="/logout" onsubmit="return logout(this)">
+        <button type="submit" class="button-error">Log out</button>
+    </form>
+</main>
+<div class="container">
+    <div th:include="${bodyContent}"></div>
+</div>
 </body>
 </html>

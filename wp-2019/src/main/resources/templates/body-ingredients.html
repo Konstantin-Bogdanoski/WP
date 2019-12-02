@@ -1,0 +1,48 @@
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Spicy</th>
+        <th>Veggie</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tr th:each="ingredient : ${ingredients}">
+        <td>
+            <span th:text="${ingredient.id}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.name}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.spicy}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.veggie}"></span>
+        </td>
+        <td>
+            <form th:action="@{/admin/editIngredient/} + ${ingredient.id}" method="get">
+                <button type="submit" class="button-secondary">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/ingredients/} + ${ingredient.id}" th:method="delete" method="post"
+                  onsubmit="return deleteProduct(this, '${ingredient.id}');">
+                <input type="hidden" name="ingredientID" th:value="${ingredient.id}">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <button type="submit" class="button-error">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<script>
+    function deleteProduct(form, ingredientID) {
+        if (confirm("Are you sure you want to delete the ingredient?")) {
+            form.action(ingredientID);
+            return true;
+        }
+        return false;
+    }
+</script>

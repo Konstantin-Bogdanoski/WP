@@ -35,6 +35,11 @@
             background: rgb(202, 60, 60); /* this is a maroon */
         }
     </style>
+    <script>
+        function logout(form) {
+            return confirm("Are you sure you want to logout");
+        }
+    </script>
 </head>
 <body>
 <header>
@@ -42,6 +47,14 @@
     <span>Signed in as:</span><strong>
     <span th:text="${user.firstName}"></span>
     <span th:text="${user.lastName}"></span></strong>
+    <button th:if="${user.userRole == 'ROLE_ADMIN'}" onclick="location.href='/admin'" class="button-success">Admin
+        Page
+    </button>
+    <form style="display: inline-block" method="get" action="/logout" onsubmit="return logout(this)">
+        <button type="submit" class="button-error">Log out</button>
+    </form>
+    <!-- NOT ALLOWED DUE TO LOGIC -->
+    <!--<button class="button-error" onclick="location.href='/delete'">Delete your orders</button>-->
 </header>
 <main>
     <h2>Choose pizza:</h2>
@@ -50,20 +63,15 @@
             <li th:each="pizza : ${pizzas}">
             <span>
                 <input type="radio" th:name="selectedPizza" th:value="${pizza.name}" required/>
-                <strong><label th:text="${pizza.name}"></label></strong> (<span th:text="${pizza.description}"></span>)
+                <strong><label th:text="${pizza.name}"></label></strong> (<span
+                    th:each="pizzaIngredient, iterStat : ${pizza.pizzaIngredients}"
+                    th:text="!${iterStat.last} ? ${pizzaIngredient.ingredient.name} + ', ' : ${pizzaIngredient.ingredient.name}"></span>)
             </span>
                 <hr>
             </li>
         </ul>
         <button type="submit" class="button-success">Next step</button>
     </form>
-    <form action="/logout" style="display: inline-block">
-        <button class="button-error">Log out</button>
-    </form>
-    <form action="/delete" style="display: inline-block">
-        <button class="button-error">Delete your orders</button>
-    </form>
-    <br/>
 </main>
 </body>
 </html>
