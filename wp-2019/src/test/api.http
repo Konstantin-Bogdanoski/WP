@@ -1,0 +1,22 @@
+POST http://localhost:8080/login
+username: k.bogdanoski
+password: test123
+Accept: application/json
+
+###
+GET http://localhost:8080/pizzas
+Accept: application/json
+
+###
+GET http://localhost:8080/pizzas?totalIngredients=1
+Accept: application/json
+
+###
+GET http://localhost:8080/pizzas/compare?pizza1=1&pizza2=2
+Accept: application/json
+
+###
+GET http://localhost:8080/pizzas
+Accept: application/json
+
+###
