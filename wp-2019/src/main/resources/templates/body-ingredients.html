@@ -1,0 +1,40 @@
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Spicy</th>
+        <th>Veggie</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tr th:each="ingredient : ${ingredients}">
+        <td>
+            <span th:text="${ingredient.id}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.name}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.spicy}"></span>
+        </td>
+        <td>
+            <span th:text="${ingredient.veggie}"></span>
+        </td>
+        <td>
+            <form th:action="@{/editIngredient/} + ${ingredient.id}" th:method="post">
+                <input type="hidden" th:field="method" value="patch">
+                <input type="hidden" th:field="${ingredient.id}">
+                <button type="submit" class="button-secondary">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/ingredients/} + ${ingredient.id}" th:method="post">
+                <input type="hidden" name="method" value="delete">
+                <input type="hidden" name="" value="${ingredient.id}">
+                <button type="submit" class="button-error">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>

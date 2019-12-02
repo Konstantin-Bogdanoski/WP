@@ -1,6 +1,8 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
@@ -15,12 +17,20 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Ingredient extends BaseEntity implements Comparable<Ingredient> {
     private String name;
     private boolean spicy;
     private boolean veggie;
     @OneToMany(mappedBy = "ingredient")
     private List<PizzaIngredient> pizzaIngredients;
+
+    public Ingredient(String name, boolean spicy, boolean veggie) {
+        this.name = name;
+        this.spicy = spicy;
+        this.veggie = veggie;
+    }
 
     @Override
     public int compareTo(Ingredient ingredient) {

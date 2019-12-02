@@ -1,0 +1,24 @@
+<style>
+    body {
+        text-align: center;
+    }
+
+    #form {
+        padding: 50px;
+        margin: 50px;
+        border: 2px solid black;
+        display: inline-block;
+        background: navajowhite;
+    }
+</style>
+<form id="form" action="#" th:action="@{/ingredients}" th:object="${ingredient}" method="post">
+    <h2>New Ingredient</h2>
+    <label for="name">Name</label>
+    <input id="name" th:field="*{name}" type="text"><br><br>
+    <label for="spicy">Spicy?</label>
+    <input id="spicy" th:field="*{spicy}" type="checkbox">
+    <label for="veggie">Veggie?</label>
+    <input id="veggie" th:field="*{veggie}" type="checkbox"><br><br>
+    <hr>
+    <button type="submit">Add</button>
+</form>

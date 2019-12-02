@@ -1,3 +1,4 @@
+/*
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.servlets;
 
 import lombok.AllArgsConstructor;
@@ -16,9 +17,11 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+*/
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
- */
+ *//*
+
 @WebServlet(urlPatterns = "/admin")
 @AllArgsConstructor
 public class AdminServlet extends HttpServlet {
@@ -42,8 +45,9 @@ public class AdminServlet extends HttpServlet {
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             context.setVariable("orders", orderService.findAll());
             session.setAttribute("orders", orderService.findAll());
-            springTemplateEngine.process("admin.html", context, resp.getWriter());
+            springTemplateEngine.process("master-admin.html", context, resp.getWriter());
         } else
             resp.sendError(404, "YOU ARE NOT ALLOWED TO BE HERE!");
     }
 }
+*/

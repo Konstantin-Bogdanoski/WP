@@ -1,5 +1,6 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientAlreadyExistsException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
@@ -10,6 +11,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.IngredientService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaIngredientService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -35,10 +37,28 @@ public class IngredientController {
             if (ing.getName().equals(ingredient.getName()))
                 throw new IngredientAlreadyExistsException();
         });
-        if (ingredientService.findAll().stream().map(Ingredient::isSpicy).count() >= 4)
+        if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
             throw new NoMoreSpicyIngredientsException();
         ingredient.setDateCreated(LocalDateTime.now());
         ingredientService.save(ingredient);
+    }
+
+    @PostMapping("/{id}")
+    public void deleteIng(@PathVariable Long id, @ModelAttribute Ingredient ingredient, Model model) {
+        boolean temp = model.getAttribute("method") != null;
+        if (model.getAttribute("method") != null) {
+            if (model.getAttribute("method").toString().equals("delete")) {
+                if (ingredientService.findOne(id).isPresent())
+                    deleteIngredient(id);
+                else
+                    throw new IngredientNotFoundException();
+            } else if (model.getAttribute("method").toString().equals("patch")) {
+                if (ingredientService.findOne(id).isPresent())
+                    editIngredient(id, ingredient);
+                else
+                    throw new IngredientNotFoundException();
+            }
+        }
     }
 
     @PatchMapping("/{id}")
