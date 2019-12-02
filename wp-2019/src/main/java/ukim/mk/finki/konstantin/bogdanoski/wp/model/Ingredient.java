@@ -7,6 +7,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -24,5 +25,21 @@ public class Ingredient extends BaseEntity implements Comparable<Ingredient> {
     @Override
     public int compareTo(Ingredient ingredient) {
         return this.name.compareTo(ingredient.getName());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ingredient that = (Ingredient) o;
+        return spicy == that.spicy &&
+                veggie == that.veggie &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(pizzaIngredients, that.pizzaIngredients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, spicy, veggie, pizzaIngredients);
     }
 }
