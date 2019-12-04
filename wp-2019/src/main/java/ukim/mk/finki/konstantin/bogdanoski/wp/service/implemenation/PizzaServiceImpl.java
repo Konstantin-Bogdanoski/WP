@@ -1,11 +1,14 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.service.implemenation;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.PizzaNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.PizzaRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,5 +37,10 @@ public class PizzaServiceImpl extends BaseEntityCrudServiceImpl<Pizza, PizzaRepo
         if (repository.findByName(name).isPresent())
             return repository.findByName(name).get();
         throw new PizzaNotFoundException();
+    }
+
+    @Override
+    public Page<Pizza> findPaginated(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

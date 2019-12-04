@@ -80,6 +80,7 @@
 
             table td {
                 border-bottom: 1px solid darkolivegreen;
+                border-left: 1px solid darkolivegreen;
                 display: block;
                 font-size: .8em;
                 text-align: right;
@@ -142,17 +143,26 @@
 <body>
 <main>
     <h1>ADMIN PAGE</h1><br>
-    <form method="get" action="/admin">
-        <button type="submit" class="button-success">Admin Page</button>
-    </form>
     <form method="get" action="/">
-        <button type="submit" class="button-success">Home Page</button>
+        <button type="submit" class="button-secondary">Home Page</button>
+    </form>
+    <form method="get" action="/admin">
+        <button type="submit" class="button-success">Orders Page</button>
+    </form>
+    <form method="get" action="/admin/users">
+        <button type="submit" class="button-success">Users Page</button>
     </form>
     <form method="get" action="/admin/ingredients">
         <button type="submit" class="button-success">Ingredients Page</button>
     </form>
+    <form method="get" action="/admin/pizzas">
+        <button type="submit" class="button-success">Pizzas Page</button>
+    </form>
     <form method="get" action="/admin/addIngredient">
         <button type="submit" class="button-success">Add Ingredient</button>
+    </form>
+    <form method="get" action="/admin/addPizza">
+        <button type="submit" class="button-success">Add Pizza</button>
     </form>
     <form method="get" action="/logout" onsubmit="return logout(this)">
         <button type="submit" class="button-error">Log out</button>

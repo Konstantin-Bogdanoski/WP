@@ -1,5 +1,9 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +55,7 @@ public class IngredientController {
         if (ingredientService.findOne(id).isPresent()) {
             if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
                 throw new NoMoreSpicyIngredientsException();
+            newIngredient.setDateUpdated(LocalDateTime.now());
             ingredientService.save(newIngredient);
         } else
             throw new IngredientNotFoundException();
@@ -67,16 +72,22 @@ public class IngredientController {
     }
 
     @GetMapping
-    public List<Ingredient> getIngredients(@RequestParam(name = "spicy", required = false) boolean spicy) {
+    public Page<Ingredient> getIngredients(@PageableDefault(value = 10) Pageable pageable, @RequestParam(name = "spicy", required = false) boolean spicy) {
         List<Ingredient> ingredients = ingredientService.findAll();
         if (!spicy) {
             if (!ingredients.isEmpty()) {
                 Collections.sort(ingredients);
-                return ingredients;
+                int start = (int) pageable.getOffset();
+                int end = Math.min((start + pageable.getPageSize()), ingredients.size());
+                return new PageImpl<Ingredient>(ingredients.subList(start, end), pageable, ingredients.size());
             }
             throw new IngredientNotFoundException();
-        } else
-            return ingredients.stream().filter(Ingredient::isSpicy).collect(Collectors.toList());
+        } else {
+            List<Ingredient> spicyIngredients = ingredients.stream().filter(Ingredient::isSpicy).sorted().collect(Collectors.toList());
+            int start = (int) pageable.getOffset();
+            int end = Math.min((start + pageable.getPageSize()), spicyIngredients.size());
+            return new PageImpl<Ingredient>(spicyIngredients.subList(start, end), pageable, spicyIngredients.size());
+        }
     }
 
     @GetMapping("/{id}")
@@ -87,7 +98,7 @@ public class IngredientController {
     }
 
     @GetMapping("/{id}/pizzas")
-    public List<Pizza> getPizzasWithIngredient(@PathVariable Long ingredientID) {
+    public List<Pizza> getPizzasWithIngredient(@PathVariable(name = "id") Long ingredientID) {
         return pizzaIngredientService.findAll()
                 .stream()
                 .filter(ingr -> ingr.getIngredient().getId().equals(ingredientID))

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredientCompositeKey;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.PizzaIngredientRepository;
@@ -73,6 +74,11 @@ public class PizzaIngredientServiceImpl implements PizzaIngredientService {
 
     public void delete(Iterable<PizzaIngredient> entities) {
         getRepository().deleteAll(entities);
+    }
+
+    @Override
+    public void deleteAllByPizza(Pizza pizza) {
+        getRepository().deletePizzaIngredientByPizza(pizza);
     }
 
     public void deleteAll() {

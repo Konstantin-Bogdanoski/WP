@@ -1,21 +1,27 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.PizzaAlreadyExistsException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.PizzaIngredientNotVeggieException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.PizzaNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Ingredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredient;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredientCompositeKey;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.IngredientService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaIngredientService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
-import javax.persistence.criteria.CriteriaBuilder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -34,38 +40,86 @@ public class PizzaController {
     }
 
     @PostMapping
-    public void addPizza(@ModelAttribute Pizza pizza) {
+    public ModelAndView addPizza(@ModelAttribute(name = "pizza") Pizza newPizza, @RequestParam(name = "newIngredients") ArrayList<Long> newIngredients) {
         pizzaService.findAll().forEach(pizza1 -> {
-            if (pizza1.getName().equals(pizza.getName()))
+            if (pizza1.getName().equals(newPizza.getName()))
                 throw new PizzaAlreadyExistsException();
         });
+        pizzaService.save(newPizza);
+        Pizza pizza = pizzaService.findByName(newPizza.getName());
+        List<PizzaIngredient> pizzaIngredients = new ArrayList<>();
+        newIngredients.forEach(ing -> {
+            if (ingredientService.findOne(ing).isPresent()) {
+                PizzaIngredient pizzaIngredient = new PizzaIngredient();
+                pizzaIngredient.setPizza(pizza);
+                pizzaIngredient.setIngredient(ingredientService.findOne(ing).get());
+                PizzaIngredientCompositeKey compositeKey = new PizzaIngredientCompositeKey();
+                compositeKey.setPizzaId(pizza.getId());
+                compositeKey.setIngredientId(ing);
+                pizzaIngredient.setCompositeKey(compositeKey);
+                pizzaIngredients.add(pizzaIngredient);
+                pizzaIngredientService.save(pizzaIngredient);
+            } else
+                throw new IngredientNotFoundException();
+        });
+
+        pizza.setPizzaIngredients(pizzaIngredients);
+        pizzaService.save(pizza);
+
         if (pizza.isVeggie())
             pizza.getPizzaIngredients().forEach(ingredient -> {
-                if (!ingredient.getIngredient().isVeggie())
+                if (!ingredient.getIngredient().isVeggie()) {
+                    pizzaIngredientService.deleteAllByPizza(pizza);
+                    pizzaService.delete(pizza.getId());
                     throw new PizzaIngredientNotVeggieException();
+                }
             });
-        pizzaService.save(pizza);
+        return new ModelAndView("redirect:/admin/pizzas");
     }
 
     @PutMapping("/{id}")
-    public void editPizza(@PathVariable(name = "id") Long pizzaId, @ModelAttribute Pizza pizza) {
-        pizzaService.findByName(pizza.getName());
+    public ModelAndView editPizza(@PathVariable(name = "id") Long pizzaId, @ModelAttribute Pizza pizza, @RequestParam(name = "newIngredients") ArrayList<Long> newIngredients) {
+        pizzaService.findOne(pizzaId);
         pizza.setId(pizzaId);
+        List<PizzaIngredient> pizzaIngredients = new ArrayList<>();
+        List<PizzaIngredient> oldIngredients = pizzaIngredientService.findAll();
+        pizzaIngredientService.deleteAllByPizza(pizza);
+        newIngredients.forEach(ing -> {
+            if (ingredientService.findOne(ing).isPresent()) {
+                if (pizza.isVeggie() && !ingredientService.findOne(ing).get().isVeggie())
+                    throw new PizzaIngredientNotVeggieException();
+                PizzaIngredient pizzaIngredient = new PizzaIngredient();
+                pizzaIngredient.setIngredient(ingredientService.findOne(ing).get());
+                pizzaIngredient.setPizza(pizza);
+                pizzaIngredient.setAmount(200);
+                PizzaIngredientCompositeKey compositeKey = new PizzaIngredientCompositeKey();
+                compositeKey.setIngredientId(ing);
+                compositeKey.setPizzaId(pizzaId);
+                pizzaIngredient.setCompositeKey(compositeKey);
+                pizzaIngredients.add(pizzaIngredient);
+                pizzaIngredientService.save(pizzaIngredient);
+            }
+        });
+        pizza.setPizzaIngredients(pizzaIngredients);
+        pizza.setDateUpdated(LocalDateTime.now());
         pizzaService.save(pizza);
+        return new ModelAndView("redirect:/admin/pizzas");
     }
 
     @DeleteMapping("/{id}")
-    public void deletePizza(@PathVariable(name = "id") Long pizzaId) {
-        if (pizzaService.findOne(pizzaId).isPresent())
+    public ModelAndView deletePizza(@PathVariable(name = "id") Long pizzaId) {
+        if (pizzaService.findOne(pizzaId).isPresent()) {
+            pizzaIngredientService.deleteAllByPizza(pizzaService.findOne(pizzaId).get());
             pizzaService.delete(pizzaId);
-        else
+        } else
             throw new PizzaNotFoundException();
+        return new ModelAndView("redirect:/admin/pizzas");
     }
 
     @GetMapping
-    public List<Pizza> getPizzas(@RequestParam(name = "totalIngredients", required = false, defaultValue = "0") float totalIngredients) {
+    public Page<Pizza> getPizzas(@PageableDefault(value = 10) Pageable pageable, @RequestParam(name = "totalIngredients", required = false, defaultValue = "0") float totalIngredients) {
         if (totalIngredients <= 0)
-            return pizzaService.findAll();
+            return pizzaService.findPaginated(pageable);
 
         //GET PIZZAS WITH INGREDIENT COUNT LESS THAN TOTALINGREDIENTAMOUNT
         List<Pizza> finalList = new ArrayList<>();
@@ -73,7 +127,11 @@ public class PizzaController {
             if (pizza.getPizzaIngredients().size() < totalIngredients)
                 finalList.add(pizza);
         });
-        return finalList;
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), pizzaService.findAll().size());
+        Page<Pizza> pages = new PageImpl<Pizza>(finalList.subList(start, end), pageable, finalList.size());
+        return new PageImpl<Pizza>(finalList);
 
         //GET PIZZAS WITH TOTAL INGREDIENT AMOUNT LESS THAN TOTALINGREDIENTAMOUNT
         //=======================================================================

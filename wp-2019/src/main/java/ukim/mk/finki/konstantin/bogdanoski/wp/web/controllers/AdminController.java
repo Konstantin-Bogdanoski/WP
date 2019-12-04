@@ -1,25 +1,27 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.thymeleaf.context.WebContext;
-import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
-import ukim.mk.finki.konstantin.bogdanoski.wp.exception.UnauthorizedAccessException;
+import ukim.mk.finki.konstantin.bogdanoski.wp.exception.*;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Ingredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaOrder;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.*;
 
+import javax.persistence.criteria.Order;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -51,10 +53,8 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView();
             modelAndView.addObject("orders", orderService.findAll());
@@ -73,14 +73,11 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
             modelAndView.addObject("ingredients", ingredientService.findAll());
-            modelAndView.addObject("ingredient", new Ingredient());
             modelAndView.addObject("bodyContent", "body-ingredients");
             return modelAndView;
         } else
@@ -95,10 +92,8 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
             modelAndView.addObject("ingredient", new Ingredient());
@@ -116,17 +111,14 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
 
         Ingredient oldIngredient = null;
-
         if (ingredientService.findOne(ingredientID).isPresent())
             oldIngredient = ingredientService.findOne(ingredientID).get();
         else
             throw new IngredientNotFoundException();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
             modelAndView.addObject("ingredient", oldIngredient);
@@ -144,15 +136,11 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
-            //TODO: Implement method
-
-
+            modelAndView.addObject("pizzas", pizzaService.findAll().stream().sorted().collect(Collectors.toList()));
             modelAndView.addObject("bodyContent", "body-pizzas");
             return modelAndView;
         } else
@@ -167,15 +155,11 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
-            //TODO: Implement method
-
-
+            modelAndView.addObject("users", userService.findAll().stream().sorted().collect(Collectors.toList()));
             modelAndView.addObject("bodyContent", "body-users");
             return modelAndView;
         } else
@@ -190,15 +174,18 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
-            //TODO: Implement method
-
-
+            Pizza oldPizza;
+            if (pizzaService.findOne(pizzaID).isPresent())
+                oldPizza = pizzaService.findOne(pizzaID).get();
+            else
+                throw new PizzaNotFoundException();
+            modelAndView.addObject("pizza", oldPizza);
+            modelAndView.addObject("ingredientList", ingredientService.findAll());
+            modelAndView.addObject("newIngredients", new ArrayList<Long>());
             modelAndView.addObject("bodyContent", "body-edit-pizza");
             return modelAndView;
         } else
@@ -213,15 +200,16 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
+        User oldUser;
+        if (userService.findOne(userID).isPresent())
+            oldUser = userService.findOne(userID).get();
+        else
+            throw new UserNotFoundException();
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
-            //TODO: Implement method
-
-
+            modelAndView.addObject("user", oldUser);
             modelAndView.addObject("bodyContent", "body-edit-user");
             return modelAndView;
         } else
@@ -236,16 +224,76 @@ public class AdminController {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         HttpSession session = context.getSession();
         User user = new User();
-
         if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
             user = userService.findByUsername((String) session.getAttribute("username")).get();
-
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
-            //TODO: Implement method
-
-
+            modelAndView.addObject("pizza", new Pizza());
+            modelAndView.addObject("ingredientList", ingredientService.findAll());
+            modelAndView.addObject("newIngredients", new ArrayList<Long>());
             modelAndView.addObject("bodyContent", "body-add-pizza");
+            return modelAndView;
+        } else
+            throw new UnauthorizedAccessException();
+    }
+
+    @DeleteMapping("/orders/{userid}/{orderid}")
+    public ModelAndView deleteOrderOfUser(@PathVariable(name = "orderid") Long orderID, @PathVariable(name = "userid") Long userID, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("\u001B[33mGET method for DELETE ORDER BY USER CALLED from Admin Controller\u001B[0m");
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        WebContext context = new WebContext(req, resp, req.getServletContext());
+        HttpSession session = context.getSession();
+        User user = new User();
+        if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
+            user = userService.findByUsername((String) session.getAttribute("username")).get();
+        if (user.getUserRole().equals("ROLE_ADMIN")) {
+            if (!orderService.findOne(orderID).isPresent())
+                throw new OrderNotExistsException();
+            orderService.delete(orderID);
+            return new ModelAndView("redirect:/admin/orders/" + userID);
+        } else
+            throw new UnauthorizedAccessException();
+    }
+
+    @DeleteMapping("/orders/{orderid}")
+    public ModelAndView deleteOrder(@PathVariable(name = "orderid") Long orderID, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("\u001B[33mGET method for DELETE ORDER CALLED from Admin Controller\u001B[0m");
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        WebContext context = new WebContext(req, resp, req.getServletContext());
+        HttpSession session = context.getSession();
+        User user = new User();
+        if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
+            user = userService.findByUsername((String) session.getAttribute("username")).get();
+        if (user.getUserRole().equals("ROLE_ADMIN")) {
+            if (!orderService.findOne(orderID).isPresent())
+                throw new OrderNotExistsException();
+            orderService.delete(orderID);
+            return new ModelAndView("redirect:/admin");
+        } else
+            throw new UnauthorizedAccessException();
+    }
+
+    @GetMapping("/orders/{id}")
+    public ModelAndView getOrdersFromUser(@PathVariable(name = "id") Long userID, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        logger.info("\u001B[33mGET method for GET ORDERS BY USER CALLED from Admin Controller\u001B[0m");
+        resp.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        WebContext context = new WebContext(req, resp, req.getServletContext());
+        HttpSession session = context.getSession();
+        User user = new User();
+        if (userService.findByUsername((String) session.getAttribute("username")).isPresent())
+            user = userService.findByUsername((String) session.getAttribute("username")).get();
+        if (!userService.findOne(userID).isPresent())
+            throw new UserNotFoundException();
+        User specUser = userService.findOne(userID).get();
+        if (user.getUserRole().equals("ROLE_ADMIN")) {
+            ModelAndView modelAndView = new ModelAndView("master-admin");
+            List<PizzaOrder> ordersFromUser = orderService.findAll().stream().filter(order -> order.getUser().equals(specUser)).collect(Collectors.toList());
+            modelAndView.addObject("orders", ordersFromUser);
+            modelAndView.addObject("user", userService.findOne(userID).get());
+            modelAndView.addObject("bodyContent", "body-user-orders");
             return modelAndView;
         } else
             throw new UnauthorizedAccessException();

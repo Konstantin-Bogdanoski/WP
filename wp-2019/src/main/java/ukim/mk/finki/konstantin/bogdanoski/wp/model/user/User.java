@@ -9,7 +9,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ import java.util.Objects;
 @Setter
 @Entity
 @Table(name = "pizza_user")
-public class User extends BaseEntity {
+public class User extends BaseEntity implements Comparable<User> {
     private String username;
     private String firstName;
     private String lastName;
@@ -53,5 +52,10 @@ public class User extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(username);
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return this.getId().compareTo(user.getId());
     }
 }

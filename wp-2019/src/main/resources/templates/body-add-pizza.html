@@ -1,2 +1,45 @@
 <!-- @author Konstantin Bogdanoski (konstantin.b@live.com) -->
-<!-- TODO: Implement html -->
+<style xmlns:th="http://www.w3.org/1999/xhtml">
+    body {
+        text-align: center;
+    }
+
+    #form {
+        padding: 50px;
+        margin: 50px;
+        border: 2px solid black;
+        display: inline-block;
+        background: navajowhite;
+    }
+</style>
+<div>
+    <form id="form" action="#" th:action="@{/pizzas/}" th:object="${pizza}" method="post">
+        <h2>New Pizza</h2>
+        <label for="name">Name</label>
+        <input id="name" th:field="*{name}" type="text"><br><br>
+        <label for="description">Description</label>
+        <input id="description" th:field="*{description}" type="text"><br><br>
+        <label for="veggie">Veggie?</label>
+        <input id="veggie" th:field="*{veggie}" type="checkbox">
+        <hr>
+        <div class="container">
+            <h3>Please check the specific Ingredients you'd like the selected Pizza to have!<br>Submitting 0 ingredients
+                will result in a Pizza with 0 ingredients</h3>
+            <div th:each="ingredient : ${ingredientList}">
+                <div style="width: 50%; text-align: left; display: inline;">
+                    <div style="width: 33%; text-align: left; display: inline-block;">
+                        <label th:text="${ingredient.veggie} ? 'veggie' : '' "></label>
+                    </div>
+                    <div style="width: 33%; text-align: left; display: inline-block;">
+                        <label th:text="${ingredient.name}"></label>
+                    </div>
+                </div>
+                <div style="width: 50%; text-align: right; display: inline;">
+                    <input name="newIngredients" type="checkbox" th:value="${ingredient.id}"/>
+                </div>
+                <hr>
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>

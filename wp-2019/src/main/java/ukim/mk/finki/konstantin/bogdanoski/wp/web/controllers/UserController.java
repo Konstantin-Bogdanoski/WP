@@ -11,6 +11,8 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.Ingredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.UserService;
 
+import java.time.LocalDateTime;
+
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
@@ -24,23 +26,25 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ModelAndView deleteIngredient(@PathVariable Long id, ModelMap model) {
-        if (userService.findOne(id).isPresent())
+    public ModelAndView deleteIngredient(@PathVariable Long id) {
+        if (userService.findOne(id).isPresent()) {
+            if (userService.findOne(id).get().getUserRole().equals("ROLE_ADMIN"))
+                throw new UnauthorizedAdminDeletionException();
             userService.delete(id);
-        else
+        } else
             throw new UserNotFoundException();
-        return new ModelAndView("redirect:/admin/users", model);
+        return new ModelAndView("redirect:/admin/users");
     }
 
     @PatchMapping("/{id}")
-    public ModelAndView editUser(@PathVariable Long id, @ModelAttribute(name = "newUser") User newUser, ModelMap model) {
+    public ModelAndView editUser(@PathVariable Long id, @ModelAttribute(name = "newUser") User newUser) {
         newUser.setId(id);
         if (userService.findOne(id).isPresent()) {
-            if (newUser.getUserRole().equals("ROLE_ADMIN"))
-                throw new UnauthorizedAdminDeletionException();
+            newUser.setPassword(userService.findOne(id).get().getPassword());
+            newUser.setDateUpdated(LocalDateTime.now());
             userService.save(newUser);
         } else
             throw new UserNotFoundException();
-        return new ModelAndView("redirect:/admin/users", model);
+        return new ModelAndView("redirect:/admin/users");
     }
 }

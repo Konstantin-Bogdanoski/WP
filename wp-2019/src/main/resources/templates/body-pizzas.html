@@ -1,2 +1,52 @@
 <!-- @author Konstantin Bogdanoski (konstantin.b@live.com) -->
-<!-- TODO: Implement html -->
+<table xmlns:th="http://www.w3.org/1999/xhtml">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Veggie</th>
+        <th>Ingredients</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tr th:each="pizza : ${pizzas}">
+        <td>
+            <span th:text="${pizza.name}"></span>
+        </td>
+        <td>
+            <span th:text="${pizza.description}"></span>
+        </td>
+        <td>
+            <span th:text="${pizza.veggie}"></span>
+        </td>
+        <td style="text-align: left;padding-left: 50px">
+            <div
+                    th:each="pizzaIngredient, iterStat : ${pizza.pizzaIngredients}"
+                    th:text="!${iterStat.last} ? ${pizzaIngredient.ingredient.name} : ${pizzaIngredient.ingredient.name}">
+            </div>
+        </td>
+        <td>
+            <form th:action="@{/admin/editPizza/} + ${pizza.id}" method="get">
+                <button type="submit" class="button-secondary">Edit</button>
+            </form>
+        </td>
+        <td>
+            <form th:action="@{/pizzas/} + ${pizza.id}" method="post"
+                  onsubmit="return deleteProduct(this, '${pizza.id}');">
+                <input type="hidden" name="pizzaID" th:value="${pizza.id}">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <button type="submit" class="button-error">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<script>
+    function deleteProduct(form, pizzaID) {
+        if (confirm("Are you sure you want to delete the Pizza?")) {
+            form.action(pizzaID);
+            return true;
+        }
+        return false;
+    }
+</script>

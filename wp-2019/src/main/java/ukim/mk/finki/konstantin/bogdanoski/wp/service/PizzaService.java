@@ -1,5 +1,7 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 
 /**
@@ -7,4 +9,6 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
  */
 public interface PizzaService extends BaseEntityCrudService<Pizza> {
     public Pizza findByName(String name);
+
+    public Page<Pizza> findPaginated(Pageable pageable);
 }

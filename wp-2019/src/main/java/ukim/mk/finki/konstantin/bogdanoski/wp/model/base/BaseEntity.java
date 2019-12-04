@@ -19,4 +19,5 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long Id;
     private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
 }

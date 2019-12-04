@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredientCompositeKey;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.PizzaIngredientRepository;
@@ -45,6 +46,8 @@ public interface PizzaIngredientService {
     public void delete(PizzaIngredient entity);
 
     public void delete(Iterable<PizzaIngredient> entities);
+
+    public void deleteAllByPizza(Pizza pizza);
 
     public void deleteAll();
 }

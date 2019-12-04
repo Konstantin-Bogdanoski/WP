@@ -22,10 +22,11 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pizza extends BaseEntity {
+public class Pizza extends BaseEntity implements Comparable<Pizza> {
     private String name;
     private String description;
     private boolean veggie;
+    @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "pizza")
     private List<PizzaIngredient> pizzaIngredients;
 
@@ -49,5 +50,10 @@ public class Pizza extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(name, description, veggie, pizzaIngredients);
+    }
+
+    @Override
+    public int compareTo(Pizza pizza) {
+        return this.getName().compareTo(pizza.getName());
     }
 }

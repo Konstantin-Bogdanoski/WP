@@ -1,5 +1,6 @@
 package ukim.mk.finki.konstantin.bogdanoski.wp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ public class Ingredient extends BaseEntity implements Comparable<Ingredient> {
     private boolean spicy;
     private boolean veggie;
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "ingredient")
+    @JsonIgnore
     private List<PizzaIngredient> pizzaIngredients;
 
     public Ingredient(String name, boolean spicy, boolean veggie) {

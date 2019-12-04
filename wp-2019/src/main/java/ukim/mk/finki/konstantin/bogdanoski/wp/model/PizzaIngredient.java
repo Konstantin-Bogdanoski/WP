@@ -8,6 +8,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.base.BaseEntity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -31,4 +32,20 @@ public class PizzaIngredient {
     Ingredient ingredient;
 
     float amount;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PizzaIngredient that = (PizzaIngredient) o;
+        return Float.compare(that.amount, amount) == 0 &&
+                compositeKey.equals(that.compositeKey) &&
+                pizza.equals(that.pizza) &&
+                ingredient.equals(that.ingredient);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(compositeKey, pizza, ingredient, amount);
+    }
 }

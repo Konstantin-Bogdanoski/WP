@@ -1,7 +1,7 @@
+<!-- @author Konstantin Bogdanoski (konstantin.b@live.com) -->
 <table xmlns:th="http://www.w3.org/1999/xhtml">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Name</th>
         <th>Spicy</th>
         <th>Veggie</th>
@@ -10,9 +10,6 @@
     </tr>
     </thead>
     <tr th:each="ingredient : ${ingredients}">
-        <td>
-            <span th:text="${ingredient.id}"></span>
-        </td>
         <td>
             <span th:text="${ingredient.name}"></span>
         </td>
@@ -28,7 +25,7 @@
             </form>
         </td>
         <td>
-            <form th:action="@{/ingredients/} + ${ingredient.id}" th:method="delete" method="post"
+            <form th:action="@{/ingredients/} + ${ingredient.id}" method="post"
                   onsubmit="return deleteProduct(this, '${ingredient.id}');">
                 <input type="hidden" name="ingredientID" th:value="${ingredient.id}">
                 <input type="hidden" name="_method" value="DELETE"/>
