@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
@@ -82,7 +81,6 @@ public class PizzaController {
         pizzaService.findOne(pizzaId);
         pizza.setId(pizzaId);
         List<PizzaIngredient> pizzaIngredients = new ArrayList<>();
-        List<PizzaIngredient> oldIngredients = pizzaIngredientService.findAll();
         pizzaIngredientService.deleteAllByPizza(pizza);
         newIngredients.forEach(ing -> {
             if (ingredientService.findOne(ing).isPresent()) {
@@ -117,7 +115,7 @@ public class PizzaController {
     }
 
     @GetMapping
-    public Page<Pizza> getPizzas(@PageableDefault(value = 10) Pageable pageable, @RequestParam(name = "totalIngredients", required = false, defaultValue = "0") float totalIngredients) {
+    public Page<Pizza> getPizzas(@RequestParam(name = "totalIngredients", required = false, defaultValue = "0") Long totalIngredients, Pageable pageable) {
         if (totalIngredients <= 0)
             return pizzaService.findPaginated(pageable);
 
@@ -128,10 +126,7 @@ public class PizzaController {
                 finalList.add(pizza);
         });
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), pizzaService.findAll().size());
-        Page<Pizza> pages = new PageImpl<Pizza>(finalList.subList(start, end), pageable, finalList.size());
-        return new PageImpl<Pizza>(finalList);
+        return new PageImpl<>(finalList);
 
         //GET PIZZAS WITH TOTAL INGREDIENT AMOUNT LESS THAN TOTALINGREDIENTAMOUNT
         //=======================================================================
@@ -162,12 +157,10 @@ public class PizzaController {
             Pizza pizza1 = pizzaService.findOne(id1).get();
             Pizza pizza2 = pizzaService.findOne(id2).get();
             List<Ingredient> ingredients = new ArrayList<>();
-            pizza1.getPizzaIngredients().forEach(ing1 -> {
-                pizza2.getPizzaIngredients().forEach(ing2 -> {
-                    if (ing1.getIngredient().equals(ing2.getIngredient()))
-                        ingredients.add(ing1.getIngredient());
-                });
-            });
+            pizza1.getPizzaIngredients().forEach(ing1 -> pizza2.getPizzaIngredients().forEach(ing2 -> {
+                if (ing1.getIngredient().equals(ing2.getIngredient()))
+                    ingredients.add(ing1.getIngredient());
+            }));
             return ingredients;
         }
         throw new PizzaNotFoundException();
