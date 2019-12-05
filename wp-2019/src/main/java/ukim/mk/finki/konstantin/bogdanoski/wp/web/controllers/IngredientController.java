@@ -72,21 +72,21 @@ public class IngredientController {
     }
 
     @GetMapping
-    public Page<Ingredient> getIngredients(@PageableDefault(value = 10) Pageable pageable, @RequestParam(name = "spicy", required = false) boolean spicy) {
+    public Page<Ingredient> getIngredients(@PageableDefault(value = 5) Pageable pageable, @RequestParam(name = "spicy", required = false) boolean spicy) {
         List<Ingredient> ingredients = ingredientService.findAll();
         if (!spicy) {
             if (!ingredients.isEmpty()) {
                 Collections.sort(ingredients);
                 int start = (int) pageable.getOffset();
                 int end = Math.min((start + pageable.getPageSize()), ingredients.size());
-                return new PageImpl<Ingredient>(ingredients.subList(start, end), pageable, ingredients.size());
+                return new PageImpl<>(ingredients.subList(start, end), pageable, ingredients.size());
             }
             throw new IngredientNotFoundException();
         } else {
             List<Ingredient> spicyIngredients = ingredients.stream().filter(Ingredient::isSpicy).sorted().collect(Collectors.toList());
             int start = (int) pageable.getOffset();
             int end = Math.min((start + pageable.getPageSize()), spicyIngredients.size());
-            return new PageImpl<Ingredient>(spicyIngredients.subList(start, end), pageable, spicyIngredients.size());
+            return new PageImpl<>(spicyIngredients.subList(start, end), pageable, spicyIngredients.size());
         }
     }
 

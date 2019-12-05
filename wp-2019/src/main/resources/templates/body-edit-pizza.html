@@ -37,11 +37,13 @@
                     </div>
                 </div>
                 <div style="width: 50%; text-align: right; display: inline;">
-                    <input name="newIngredients" type="checkbox" th:value="${ingredient.id}"/>
+                    <input name="newIngredients" type="checkbox" th:checked="${oldIngredients.contains(ingredient.id)}"
+                           th:value="${ingredient.id}"/>
                 </div>
                 <hr>
             </div>
         </div>
-        <button type="submit">Change</button>
+        <button type="submit" class="button-secondary">Change</button>
+        <button type="button" class="button-error" onclick="location.href='/admin/pizzas'">Cancel</button>
     </form>
 </div>

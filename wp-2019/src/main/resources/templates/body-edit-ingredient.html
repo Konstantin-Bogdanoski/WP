@@ -22,5 +22,6 @@
     <label for="veggie">Veggie?</label>
     <input id="veggie" th:field="*{veggie}" th:checked="${ingredient.veggie}" type="checkbox"><br><br>
     <hr>
-    <button type="submit">Change</button>
+    <button type="submit" class="button-secondary">Change</button>
+    <button type="button" class="button-error" onclick="location.href='/admin/ingredients'">Cancel</button>
 </form>

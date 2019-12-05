@@ -107,19 +107,19 @@
         .button-secondary {
             color: white;
             border-radius: 4px;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            border-width: 2px;
         }
 
         .button-success {
-            background: rgb(28, 184, 65); /* this is a green */
+            background-color: rgb(28, 184, 65); /* this is a green */
         }
 
         .button-error {
-            background: rgb(202, 60, 60); /* this is a maroon */
+            background-color: rgb(202, 60, 60); /* this is a maroon */
         }
 
         .button-secondary {
-            background: rgb(66, 184, 221); /* this is a light blue */
+            background-color: rgb(66, 184, 221); /* this is a light blue */
         }
 
         form {
@@ -142,31 +142,35 @@
 </head>
 <body>
 <main>
-    <h1>ADMIN PAGE</h1><br>
-    <form method="get" action="/">
-        <button type="submit" class="button-secondary">Home Page</button>
-    </form>
-    <form method="get" action="/admin">
-        <button type="submit" class="button-success">Orders Page</button>
-    </form>
-    <form method="get" action="/admin/users">
-        <button type="submit" class="button-success">Users Page</button>
-    </form>
-    <form method="get" action="/admin/ingredients">
-        <button type="submit" class="button-success">Ingredients Page</button>
-    </form>
-    <form method="get" action="/admin/pizzas">
-        <button type="submit" class="button-success">Pizzas Page</button>
-    </form>
-    <form method="get" action="/admin/addIngredient">
-        <button type="submit" class="button-success">Add Ingredient</button>
-    </form>
-    <form method="get" action="/admin/addPizza">
-        <button type="submit" class="button-success">Add Pizza</button>
-    </form>
-    <form method="get" action="/logout" onsubmit="return logout(this)">
-        <button type="submit" class="button-error">Log out</button>
-    </form>
+    <div>
+        <h1>ADMIN PAGE</h1><br>
+    </div>
+    <div>
+        <form method="get" action="/">
+            <button type="submit" class="button-secondary">Home Page</button>
+        </form>
+        <form method="get" action="/admin">
+            <button type="submit" class="button-success">Orders Page</button>
+        </form>
+        <form method="get" action="/admin/users">
+            <button type="submit" class="button-success">Users Page</button>
+        </form>
+        <form method="get" action="/admin/ingredients">
+            <button type="submit" class="button-success">Ingredients Page</button>
+        </form>
+        <form method="get" action="/admin/pizzas">
+            <button type="submit" class="button-success">Pizzas Page</button>
+        </form>
+        <form method="get" action="/admin/addIngredient">
+            <button type="submit" class="button-success">Add Ingredient</button>
+        </form>
+        <form method="get" action="/admin/addPizza">
+            <button type="submit" class="button-success">Add Pizza</button>
+        </form>
+        <form method="get" action="/logout" onsubmit="return logout(this)">
+            <button type="submit" class="button-error">Log out</button>
+        </form>
+    </div>
 </main>
 <div class="container">
     <div th:include="${bodyContent}"></div>

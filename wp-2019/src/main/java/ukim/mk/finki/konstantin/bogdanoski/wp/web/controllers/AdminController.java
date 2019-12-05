@@ -184,8 +184,9 @@ public class AdminController {
             else
                 throw new PizzaNotFoundException();
             modelAndView.addObject("pizza", oldPizza);
-            modelAndView.addObject("ingredientList", ingredientService.findAll());
+            modelAndView.addObject("ingredientList", ingredientService.findAll().stream().sorted().collect(Collectors.toList()));
             modelAndView.addObject("newIngredients", new ArrayList<Long>());
+            modelAndView.addObject("oldIngredients", oldPizza.getPizzaIngredients().stream().map(pizzaIngredient -> pizzaIngredient.getIngredient().getId()).collect(Collectors.toList()));
             modelAndView.addObject("bodyContent", "body-edit-pizza");
             return modelAndView;
         } else
@@ -229,7 +230,7 @@ public class AdminController {
         if (user.getUserRole().equals("ROLE_ADMIN")) {
             ModelAndView modelAndView = new ModelAndView("master-admin");
             modelAndView.addObject("pizza", new Pizza());
-            modelAndView.addObject("ingredientList", ingredientService.findAll());
+            modelAndView.addObject("ingredientList", ingredientService.findAll().stream().sorted().collect(Collectors.toList()));
             modelAndView.addObject("newIngredients", new ArrayList<Long>());
             modelAndView.addObject("bodyContent", "body-add-pizza");
             return modelAndView;
