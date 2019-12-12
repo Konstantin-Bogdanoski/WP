@@ -3,7 +3,6 @@ package ukim.mk.finki.konstantin.bogdanoski.wp.web.controllers;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
