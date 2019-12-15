@@ -1,3 +1,4 @@
+/*
 package ukim.mk.finki.konstantin.bogdanoski.wp.web.filters;
 
 import lombok.AllArgsConstructor;
@@ -10,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+*/
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
- */
+ *//*
+
 @WebFilter
 @AllArgsConstructor
 public class LoginFilter implements Filter {
@@ -45,3 +48,4 @@ public class LoginFilter implements Filter {
         }
     }
 }
+*/

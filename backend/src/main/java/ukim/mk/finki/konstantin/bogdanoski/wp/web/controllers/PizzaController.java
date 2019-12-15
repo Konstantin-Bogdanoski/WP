@@ -26,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/pizzas")
+@CrossOrigin(origins = "http://localhost:3000")
 public class PizzaController {
     private PizzaService pizzaService;
     private PizzaIngredientService pizzaIngredientService;
@@ -118,7 +119,6 @@ public class PizzaController {
         if (totalIngredients <= 0)
             return pizzaService.findPaginated(pageable);
 
-        //GET PIZZAS WITH INGREDIENT COUNT LESS THAN TOTALINGREDIENTAMOUNT
         List<Pizza> finalList = new ArrayList<>();
         pizzaService.findAll().forEach(pizza -> {
             if (pizza.getPizzaIngredients().size() < totalIngredients)
@@ -126,21 +126,6 @@ public class PizzaController {
         });
 
         return new PageImpl<>(finalList);
-
-        //GET PIZZAS WITH TOTAL INGREDIENT AMOUNT LESS THAN TOTALINGREDIENTAMOUNT
-        //=======================================================================
-        /*List<Pizza> pizzaList = pizzaService.findAll();
-        List<Pizza> finalList = new ArrayList<>();
-        for (Pizza pizza : pizzaList) {
-            List<PizzaIngredient> ingredients = pizza.getPizzaIngredients();
-            float totalIng = 0;
-            for (PizzaIngredient ing : ingredients) {
-                totalIng += ing.getAmount();
-            }
-            if (totalIng < totalIngredients)
-                finalList.add(pizza);
-        }
-        return finalList;*/
     }
 
     @GetMapping("/{id}")

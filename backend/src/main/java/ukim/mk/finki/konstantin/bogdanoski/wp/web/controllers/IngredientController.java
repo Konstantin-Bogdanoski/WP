@@ -6,8 +6,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import sun.awt.SunHints;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientAlreadyExistsException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.NoMoreSpicyIngredientsException;
@@ -26,7 +28,8 @@ import java.util.stream.Collectors;
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 @RestController
-@RequestMapping("/ingredients")
+@RequestMapping(path = "/ingredients", produces = MimeTypeUtils.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "http://localhost:3000")
 public class IngredientController {
     private IngredientService ingredientService;
     private PizzaIngredientService pizzaIngredientService;
@@ -49,7 +52,7 @@ public class IngredientController {
         return new ModelAndView("redirect:/admin/ingredients", model);
     }
 
-    @PatchMapping("/{id}")
+    /*@PatchMapping("/{id}")
     public ModelAndView editIngredient(@PathVariable Long id, @ModelAttribute(name = "newIngredient") Ingredient newIngredient, ModelMap model) {
         newIngredient.setId(id);
         if (ingredientService.findOne(id).isPresent()) {
@@ -60,6 +63,25 @@ public class IngredientController {
         } else
             throw new IngredientNotFoundException();
         return new ModelAndView("redirect:/admin/ingredients", model);
+    }*/
+
+    @PatchMapping("/{id}")
+    public Ingredient editIngredientRest(@PathVariable(name = "id") Long id,
+                                         @RequestParam(value = "name") String name,
+                                         @RequestParam(value = "spicy") boolean spicy,
+                                         @RequestParam(value = "veggie") boolean veggie) {
+        if (ingredientService.findOne(id).isPresent()) {
+            if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
+                throw new NoMoreSpicyIngredientsException();
+            Ingredient newIngredient = ingredientService.findOne(id).get();
+            newIngredient.setVeggie(veggie);
+            newIngredient.setSpicy(spicy);
+            newIngredient.setName(name);
+            newIngredient.setDateUpdated(LocalDateTime.now());
+            ingredientService.save(newIngredient);
+            return newIngredient;
+        } else
+            throw new IngredientNotFoundException();
     }
 
     @DeleteMapping("/{id}")
@@ -77,16 +99,12 @@ public class IngredientController {
         if (!spicy) {
             if (!ingredients.isEmpty()) {
                 Collections.sort(ingredients);
-                int start = (int) pageable.getOffset();
-                int end = Math.min((start + pageable.getPageSize()), ingredients.size());
-                return new PageImpl<>(ingredients.subList(start, end), pageable, ingredients.size());
+                return new PageImpl<>(ingredients);
             }
             throw new IngredientNotFoundException();
         } else {
             List<Ingredient> spicyIngredients = ingredients.stream().filter(Ingredient::isSpicy).sorted().collect(Collectors.toList());
-            int start = (int) pageable.getOffset();
-            int end = Math.min((start + pageable.getPageSize()), spicyIngredients.size());
-            return new PageImpl<>(spicyIngredients.subList(start, end), pageable, spicyIngredients.size());
+            return new PageImpl<>(spicyIngredients);
         }
     }
 
