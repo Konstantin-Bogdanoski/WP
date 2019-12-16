@@ -10,8 +10,9 @@ import Ingredients from "../Ingredients/ingredients";
 import Footer from "../Footer/footer";
 import PizzaService from "../../service/pizzaService";
 import IngredientService from "../../service/ingredientService";
-import AddIngredient from "../Ingredients/addIngredient/addIngredient";
-import EditIngredient from "../Ingredients/Ingredient/editIngredient/editIngredient";
+import AddIngredient from "../Ingredients/AddIngredient/addIngredient";
+import EditIngredient from "../Ingredients/Ingredient/EditIngredient/editIngredient";
+import DetailsIngredient from "../Ingredients/Ingredient/DetailsIngredient/detailsIngredient";
 
 class App extends Component {
 
@@ -52,27 +53,28 @@ class App extends Component {
         IngredientService.editIngredient(updatedIngredient).then(resp => {
             const newIngredient = resp.data;
             this.setState((prevState) => {
-                const newIngrRef = prevState.ingredients.filter((item) => {
-                    if (item.id === newIngredient.id) {
+                const newIngrRef = prevState.ingredients.map(ingr => {
+                    if (ingr.id === newIngredient.id) {
                         return newIngredient;
                     }
-                    return item;
+                    return ingr;
                 });
                 return {
                     "ingredients": newIngrRef
                 }
             });
         });
+        return <Redirect to={"/ingredients"}/>
     });
 
     saveIngredient = ((newIngredient) => {
         IngredientService.addIngredient(newIngredient).then(resp => {
             const newIngr = resp.data;
             this.setState((prevState) => {
-                const newIngredients = prevState.ingredients.filter((item) => {
+                const newIngredients = prevState.ingredients.map((item) => {
                     return item;
                 });
-                newIngredients.concat(newIngr);
+                newIngredients.push(newIngr);
                 return {
                     "ingredients": newIngredients
                 }
@@ -82,13 +84,15 @@ class App extends Component {
 
     deleteIngredient = ((id) => {
         IngredientService.deleteIngredient(id).then(resp => {
+            //TODO: AXIOS call to remove from DB
             this.setState((prevState) => {
                 const newIngredients = prevState.ingredients.filter((ingredient, index) => {
                     return index !== id;
                 });
+                debugger;
                 return {"ingredients": newIngredients}
             })
-        })
+        });
     });
 
     render() {
@@ -111,6 +115,9 @@ class App extends Component {
                             </Route>
                             <Route path="/ingredients/:id/edit" exact
                                    render={() => <EditIngredient onSubmit={this.updateIngredient}/>}>
+                            </Route>
+                            <Route path="/ingredients/:id/details" exact
+                                   render={() => <DetailsIngredient/>}>
                             </Route>
                             <Redirect to={"/"}/>
                         </div>

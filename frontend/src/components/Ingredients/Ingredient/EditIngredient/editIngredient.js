@@ -1,20 +1,39 @@
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from '../../../../custom-axios/axios'
+import {useParams} from "react-router";
+import {Link} from "react-router-dom";
 
-const AddIngredient = (props) => {
+const EditIngredient = (props) => {
+    const [ingredient, setIngredient] = useState({});
+    const {id} = useParams();
+
+    useEffect(() => {
+        axios.get("/ingredients/" + id).then((data) => {
+            setIngredient(data.data);
+        });
+    }, []);
+
     const onFormSubmit = (e) => {
         e.preventDefault();
-        debugger;
         props.onSubmit(
             {
+                "ingredientID": id,
                 "name": e.target.ingredientName.value,
                 "spicy": e.target.isSpicy.checked,
                 "veggie": e.target.isVeggie.checked
             }
         );
     };
+
+    const handleTermOnChange = (e) => {
+        const paramName = e.target.name;
+        const paramValue = e.target.value;
+        setIngredient({paramName: paramValue});
+    };
+
 
     return (
         <div className="row">
@@ -23,7 +42,7 @@ const AddIngredient = (props) => {
                 <div className="form-group row">
                     <label htmlFor="ingredient" className="col-sm-4 offset-sm-1 text-left">Name</label>
                     <div className="col-sm-6">
-                        <input type="text"
+                        <input type="text" onChange={handleTermOnChange} value={ingredient.name}
                                className="form-control" id="ingredient" name={"ingredientName"}
                                placeholder="Ingredient name" required maxLength="50"/>
                     </div>
@@ -31,14 +50,14 @@ const AddIngredient = (props) => {
                 <div className="form-group row">
                     <label htmlFor="veggie" className="col-sm-4 offset-sm-1 text-left">Veggie</label>
                     <div className="col-sm-6 col-xl-4">
-                        <input type="checkbox"
+                        <input type="checkbox" onChange={handleTermOnChange} checked={ingredient.veggie}
                                className="form-control" id="veggie" name={"isVeggie"}/>
                     </div>
                 </div>
                 <div className="form-group row">
                     <label htmlFor="spicy" className="col-sm-4 offset-sm-1 text-left">Spicy</label>
                     <div className="col-sm-6 col-xl-4">
-                        <input type="checkbox"
+                        <input type="checkbox" onChange={handleTermOnChange} checked={ingredient.spicy}
                                className="form-control" id="spicy" name={"isSpicy"}/>
                     </div>
                 </div>
@@ -71,4 +90,4 @@ const AddIngredient = (props) => {
     )
 };
 
-export default AddIngredient;
+export default EditIngredient;
