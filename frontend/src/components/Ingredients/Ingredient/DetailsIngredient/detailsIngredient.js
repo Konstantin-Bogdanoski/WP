@@ -9,6 +9,7 @@ import Pizza from "../../../Pizzas/Pizza/pizza";
 
 const DetailsIngredient = (props) => {
     let [pizzas, setPizzas] = useState();
+    let [ingredient, setIngredient] = useState();
     const {id} = useParams();
 
     useEffect(() => {
@@ -19,12 +20,20 @@ const DetailsIngredient = (props) => {
                 );
             });
             setPizzas(pizzas);
-        })
+        });
+
+        axios.get("/ingredients/" + id).then((data) => {
+            setIngredient(data.data.name);
+        });
     }, []);
 
     return (
-        <div className={"row"}>
-            {pizzas}
+        <div>
+            <h1>Pizzas with {ingredient}</h1>
+            <hr/>
+            <div className={"row"}>
+                {pizzas}
+            </div>
         </div>
     )
 };

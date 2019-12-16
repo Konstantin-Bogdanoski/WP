@@ -149,4 +149,15 @@ public class PizzaController {
         }
         throw new PizzaNotFoundException();
     }
+
+    @GetMapping("/{id}/ingredients")
+    public List<String> pizzaIngredients(@PathVariable(name = "id") Long pizzaId) {
+        List<String> ingredients = new ArrayList<>();
+        if (!pizzaService.findOne(pizzaId).isPresent())
+            throw new PizzaNotFoundException();
+        pizzaService.findOne(pizzaId).get().getPizzaIngredients().forEach(pizzaIngredient -> {
+            ingredients.add(pizzaIngredient.getIngredient().getName());
+        });
+        return ingredients;
+    }
 }
