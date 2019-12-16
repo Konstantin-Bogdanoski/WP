@@ -48,6 +48,49 @@ class App extends Component {
         });
     }
 
+    updateIngredient = ((updatedIngredient) => {
+        IngredientService.editIngredient(updatedIngredient).then(resp => {
+            const newIngredient = resp.data;
+            this.setState((prevState) => {
+                const newIngrRef = prevState.ingredients.filter((item) => {
+                    if (item.id === newIngredient.id) {
+                        return newIngredient;
+                    }
+                    return item;
+                });
+                return {
+                    "ingredients": newIngrRef
+                }
+            });
+        });
+    });
+
+    saveIngredient = ((newIngredient) => {
+        IngredientService.addIngredient(newIngredient).then(resp => {
+            const newIngr = resp.data;
+            this.setState((prevState) => {
+                const newIngredients = prevState.ingredients.filter((item) => {
+                    return item;
+                });
+                newIngredients.concat(newIngr);
+                return {
+                    "ingredients": newIngredients
+                }
+            });
+        });
+    });
+
+    deleteIngredient = ((id) => {
+        IngredientService.deleteIngredient(id).then(resp => {
+            this.setState((prevState) => {
+                const newIngredients = prevState.ingredients.filter((ingredient, index) => {
+                    return index !== id;
+                });
+                return {"ingredients": newIngredients}
+            })
+        })
+    });
+
     render() {
         return (
             <div className="App">
@@ -60,9 +103,11 @@ class App extends Component {
                             <Route path={"/pizzas"} render={() => <Pizzas pizzas={this.state.pizzas}/>}>
                             </Route>
                             <Route path="/ingredients" exact
-                                   render={() => <Ingredients ingredients={this.state.ingredients}/>}>
+                                   render={() => <Ingredients ingredients={this.state.ingredients}
+                                                              onDelete={this.deleteIngredient}/>}>
                             </Route>
-                            <Route path="/ingredients/new" exact render={() => <AddIngredient/>}>
+                            <Route path="/ingredients/new" exact
+                                   render={() => <AddIngredient onSubmit={this.saveIngredient}/>}>
                             </Route>
                             <Route path="/ingredients/:id/edit" exact
                                    render={() => <EditIngredient onSubmit={this.updateIngredient}/>}>
@@ -75,23 +120,6 @@ class App extends Component {
             </div>
         );
     }
-
-    updateIngredient = ((updatedIngredient) => {
-        IngredientService.saveOld(updatedIngredient).then(resp => {
-            const newIngredient = resp.data;
-            this.setState((prevState) => {
-                const newIngrRef = prevState.ingredients.filter((item) => {
-                    if (item.id === newIngredient.id) {
-                        return newIngredient;
-                    }
-                    return item;
-                });
-                return {
-                    "ingredients": newIngrRef,
-                }
-            });
-        });
-    });
 }
 
 export default App;

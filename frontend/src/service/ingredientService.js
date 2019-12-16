@@ -18,7 +18,15 @@ const IngredientService = {
         })
     },
 
-    saveOld(updatedIngredient) {
+    deleteIngredient(ingredientID) {
+        return axios.delete("/ingredients/" + ingredientID)
+    },
+
+    detailsIngredient(ingredientID) {
+        return axios.get("/ingredients/" + ingredientID + "/pizzas")
+    },
+
+    editIngredient(updatedIngredient) {
         const data = {
             ...updatedIngredient,
             name: updatedIngredient.name
@@ -30,20 +38,21 @@ const IngredientService = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-    }
+    },
 
-    /*addIngredient: (ingredient) => {
+    addIngredient(ingredient) {
+        debugger;
         const data = {
             ...ingredient,
-            ingredientName: ingredient.ingredient.name
+            ingredientName: ingredient.name
         };
         const formParams = qs.stringify(data);
-        return axios.post("/api/consultations", formParams, {
+        return axios.post("/ingredients", formParams, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             }
         });
-    },*/
+    },
 };
 
 export default IngredientService;

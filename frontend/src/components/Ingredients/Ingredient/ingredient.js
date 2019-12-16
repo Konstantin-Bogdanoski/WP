@@ -3,16 +3,15 @@
  */
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import EditIngredient from "./editIngredient/editIngredient";
 
 class Ingredient extends Component {
     render() {
         return (
-            this.renderIngedient()
+            this.renderIngredient()
         );
     }
 
-    renderIngedient() {
+    renderIngredient() {
         return (
             <tr>
                 <td scope="col">{this.props.ingredient.name}</td>
@@ -24,13 +23,16 @@ class Ingredient extends Component {
                         <span className="fa fa-edit"/>
                         <span><strong>Edit</strong></span>
                     </Link>
-                    <button className="btn btn-sm btn-outline-secondary ">
+                    <a onClick={() => {
+                        this.props.onDelete(this.props.ingredient.id)
+                    }} className="btn btn-sm btn-outline-secondary ">
                         <span className="fa fa-remove"/>
                         <span><strong>Remove</strong></span>
-                    </button>
-                    <button className="btn btn-sm btn-outline-dark">
+                    </a>
+                    <Link to={"/ingredients/" + this.props.ingredient.id + "/details"}
+                          className="btn btn-sm btn-outline-dark">
                         <span><strong>Details</strong></span>
-                    </button>
+                    </Link>
                 </td>
             </tr>
         )

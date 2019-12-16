@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Project.iml" filepath="$PROJECT_DIR$/.idea/Project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wp-2019/wp-2019.iml" filepath="$PROJECT_DIR$/wp-2019/wp-2019.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/backend.iml" filepath="$PROJECT_DIR$/backend/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/backend/wp-2019.iml" filepath="$PROJECT_DIR$/backend/wp-2019.iml" />
     </modules>
   </component>
 </project>

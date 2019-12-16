@@ -2,8 +2,8 @@
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 import React, {useState, useEffect} from 'react'
-import {Redirect, useParams} from 'react-router-dom';
 import axios from '../../../../custom-axios/axios'
+import {useParams} from "react-router";
 
 const EditIngredient = (props) => {
     const [ingredient, setIngredient] = useState({});
@@ -25,7 +25,6 @@ const EditIngredient = (props) => {
                 "veggie": e.target.isVeggie.checked
             }
         );
-        return <Redirect to={"/"}/>
     };
 
     const handleTermOnChange = (e) => {

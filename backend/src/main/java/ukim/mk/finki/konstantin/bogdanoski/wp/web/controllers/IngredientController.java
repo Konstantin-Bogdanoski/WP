@@ -39,7 +39,7 @@ public class IngredientController {
         this.pizzaIngredientService = pizzaIngredientService;
     }
 
-    @PostMapping
+    /*@PostMapping
     public ModelAndView addIngredient(@ModelAttribute Ingredient ingredient, ModelMap model) {
         ingredientService.findAll().forEach(ing -> {
             if (ing.getName().equals(ingredient.getName()))
@@ -50,6 +50,26 @@ public class IngredientController {
         ingredient.setDateCreated(LocalDateTime.now());
         ingredientService.save(ingredient);
         return new ModelAndView("redirect:/admin/ingredients", model);
+    }*/
+
+    @PostMapping
+    public Ingredient addIngredient(@RequestParam(value = "name") String name,
+                                    @RequestParam(value = "spicy") boolean spicy,
+                                    @RequestParam(value = "veggie") boolean veggie) {
+        ingredientService.findAll().forEach(ing -> {
+            if (ing.getName().equals(name))
+                throw new IngredientAlreadyExistsException();
+        });
+        if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
+            throw new NoMoreSpicyIngredientsException();
+        Ingredient newIngredient = new Ingredient();
+        newIngredient.setName(name);
+        newIngredient.setSpicy(spicy);
+        newIngredient.setVeggie(veggie);
+        newIngredient.setDateCreated(LocalDateTime.now());
+        newIngredient.setDateUpdated(LocalDateTime.now());
+        ingredientService.save(newIngredient);
+        return newIngredient;
     }
 
     /*@PatchMapping("/{id}")

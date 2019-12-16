@@ -9,7 +9,8 @@ import {Link} from "react-router-dom";
 const Ingredients = (props) => {
     const ingredients = props.ingredients.map((ingredient, index) => {
         return (
-            <Ingredient ingredient={ingredient} key={index} colClass={"col-md-6 mt-2 col-sm-12"}/>
+            <Ingredient ingredient={ingredient} key={index} onDelete={props.onDelete}
+                        colClass={"col-md-6 mt-2 col-sm-12"}/>
         );
     });
     return (
