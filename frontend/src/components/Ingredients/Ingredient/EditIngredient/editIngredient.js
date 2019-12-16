@@ -4,6 +4,7 @@
 import React, {useState, useEffect} from 'react'
 import axios from '../../../../custom-axios/axios'
 import {useParams} from "react-router";
+import {withRouter} from 'react-router-dom';
 import {Link} from "react-router-dom";
 
 const EditIngredient = (props) => {
@@ -18,14 +19,16 @@ const EditIngredient = (props) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
+        props.history.push('/ingredients');
         props.onSubmit(
             {
                 "ingredientID": id,
                 "name": e.target.ingredientName.value,
                 "spicy": e.target.isSpicy.checked,
                 "veggie": e.target.isVeggie.checked
-            }
+            },
         );
+
     };
 
     const handleTermOnChange = (e) => {
@@ -90,4 +93,4 @@ const EditIngredient = (props) => {
     )
 };
 
-export default EditIngredient;
+export default withRouter(EditIngredient);

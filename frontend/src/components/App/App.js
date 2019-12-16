@@ -64,7 +64,6 @@ class App extends Component {
                 }
             });
         });
-        return <Redirect to={"/ingredients"}/>
     });
 
     saveIngredient = ((newIngredient) => {
@@ -83,16 +82,13 @@ class App extends Component {
     });
 
     deleteIngredient = ((id) => {
-        IngredientService.deleteIngredient(id).then(resp => {
-            //TODO: AXIOS call to remove from DB
-            this.setState((prevState) => {
-                const newIngredients = prevState.ingredients.filter((ingredient, index) => {
-                    return index !== id;
-                });
-                debugger;
-                return {"ingredients": newIngredients}
-            })
-        });
+        IngredientService.deleteIngredient(id).then();
+        this.setState((prevState) => {
+            const newIngredients = prevState.ingredients.filter((ingredient, index) => {
+                return ingredient.id !== id;
+            });
+            return {"ingredients": newIngredients}
+        })
     });
 
     render() {

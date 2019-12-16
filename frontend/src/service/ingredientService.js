@@ -41,7 +41,6 @@ const IngredientService = {
     },
 
     addIngredient(ingredient) {
-        debugger;
         const data = {
             ...ingredient,
             ingredientName: ingredient.name

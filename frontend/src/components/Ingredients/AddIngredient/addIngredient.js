@@ -2,10 +2,12 @@
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
 import React from 'react'
+import {withRouter} from 'react-router-dom';
 
 const AddIngredient = (props) => {
     const onFormSubmit = (e) => {
         e.preventDefault();
+        props.history.push('/ingredients');
         props.onSubmit(
             {
                 "name": e.target.ingredientName.value,
@@ -70,4 +72,4 @@ const AddIngredient = (props) => {
     )
 };
 
-export default AddIngredient;
+export default withRouter(AddIngredient);
