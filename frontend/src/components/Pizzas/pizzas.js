@@ -3,6 +3,7 @@
  */
 import React from "react";
 import Pizza from "./Pizza/pizza.js"
+import {Link} from "react-router-dom";
 
 const Pizzas = (props) => {
     const pizzas = props.pizzas.map((pizza, index) => {
@@ -12,7 +13,13 @@ const Pizzas = (props) => {
     });
     return (
         <div className={"row"}>
-            {pizzas}
+            <h4 className="text-upper text-center">Pizzas</h4>
+            <div className={"row"}>
+                {pizzas}
+            </div>
+            <Link className="btn btn-outline-secondary" to={"/pizzas/new"}>
+                <span><strong>Add new pizza</strong></span>
+            </Link>
         </div>
     )
 };

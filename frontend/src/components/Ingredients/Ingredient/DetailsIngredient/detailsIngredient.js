@@ -1,10 +1,9 @@
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-import React, {useState, useEffect, Component} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from '../../../../custom-axios/axios'
 import {useParams} from "react-router";
-import {Link} from "react-router-dom";
 import Pizza from "../../../Pizzas/Pizza/pizza";
 
 const DetailsIngredient = (props) => {

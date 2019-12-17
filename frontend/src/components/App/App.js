@@ -13,6 +13,10 @@ import IngredientService from "../../service/ingredientService";
 import AddIngredient from "../Ingredients/AddIngredient/addIngredient";
 import EditIngredient from "../Ingredients/Ingredient/EditIngredient/editIngredient";
 import DetailsIngredient from "../Ingredients/Ingredient/DetailsIngredient/detailsIngredient";
+import FavoritePizza from "../Statistic/FavoritePizza/favoritePizza";
+import OrderService from "../../service/orderService";
+import AddPizza from "../Pizzas/AddPizza/addPizza";
+import Pizza from "../Pizzas/Pizza/pizza";
 
 class App extends Component {
 
@@ -20,13 +24,15 @@ class App extends Component {
         super(props);
         this.state = {
             pizzas: [],
-            ingredients: []
+            ingredients: [],
+            orders: []
         }
     }
 
     componentDidMount() {
         this.loadIngredients();
         this.loadPizzas();
+        this.loadOrdersPizza();
     }
 
     loadPizzas() {
@@ -47,6 +53,16 @@ class App extends Component {
                 }
             })
         });
+    }
+
+    loadOrdersPizza() {
+        OrderService.fetchOrdersPizza().then(resp => {
+            this.setState((prevState) => {
+                return {
+                    "orders": resp.data
+                }
+            })
+        })
     }
 
     updateIngredient = ((updatedIngredient) => {
@@ -81,6 +97,22 @@ class App extends Component {
         });
     });
 
+    savePizza = ((newPizza) => {
+        debugger;
+        PizzaService.addPizza(newPizza).then(resp => {
+            const newPiz = resp.data;
+            this.setState((prevState) => {
+                const newPizzas = prevState.pizzas.map((item) => {
+                    return item;
+                });
+                newPizzas.push(newPiz);
+                return {
+                    "pizzas": newPizzas
+                }
+            });
+        });
+    });
+
     deleteIngredient = ((id) => {
         IngredientService.deleteIngredient(id).then();
         this.setState((prevState) => {
@@ -98,23 +130,18 @@ class App extends Component {
                     <Header/>
                     <main role="main" className="mt-3">
                         <div className="container">
-                            <Route path={"/"} exact render={() => <Pizzas pizzas={this.state.pizzas}/>}>
-                            </Route>
-                            <Route path={"/pizzas"} render={() => <Pizzas pizzas={this.state.pizzas}/>}>
-                            </Route>
+                            <Route path={"/"} exact render={() => <FavoritePizza orders={this.state.orders}/>}/>
+                            <Route path={"/pizzas"} exact render={() => <Pizzas pizzas={this.state.pizzas}/>}/>
                             <Route path="/ingredients" exact
                                    render={() => <Ingredients ingredients={this.state.ingredients}
-                                                              onDelete={this.deleteIngredient}/>}>
-                            </Route>
+                                                              onDelete={this.deleteIngredient}/>}/>
                             <Route path="/ingredients/new" exact
-                                   render={() => <AddIngredient onSubmit={this.saveIngredient}/>}>
-                            </Route>
+                                   render={() => <AddIngredient onSubmit={this.saveIngredient}/>}/>
                             <Route path="/ingredients/:id/edit" exact
-                                   render={() => <EditIngredient onSubmit={this.updateIngredient}/>}>
-                            </Route>
+                                   render={() => <EditIngredient onSubmit={this.updateIngredient}/>}/>
                             <Route path="/ingredients/:id/details" exact
-                                   render={() => <DetailsIngredient/>}>
-                            </Route>
+                                   render={() => <DetailsIngredient/>}/>
+                            <Route path="/pizzas/new" exact render={() => <AddPizza onSubmit={this.savePizza}/>}/>
                             <Redirect to={"/"}/>
                         </div>
                     </main>

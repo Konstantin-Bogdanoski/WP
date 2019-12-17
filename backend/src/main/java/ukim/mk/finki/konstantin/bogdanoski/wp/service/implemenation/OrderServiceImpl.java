@@ -7,6 +7,8 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.user.User;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.OrderRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.OrderService;
 
+import java.util.List;
+
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
@@ -24,7 +26,8 @@ public class OrderServiceImpl extends BaseEntityCrudServiceImpl<PizzaOrder, Orde
         return repository;
     }
 
-    public void placeOrder(Pizza pizza, User user) {
-
+    @Override
+    public List<PizzaOrder> findByPizza(Pizza pizza) {
+        return repository.findAllByPizza(pizza);
     }
 }

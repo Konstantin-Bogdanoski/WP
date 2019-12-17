@@ -18,33 +18,18 @@ const PizzaService = {
         })
     },
 
-    /*addPizza: (pizza) => {
+    addPizza: (pizza) => {
         const data = {
             ...pizza,
-            pizzaName: pizza.pizza.name
         };
         const formParams = qs.stringify(data);
-        return axios.post("/api/consultations", formParams, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        });
-    },*/
-    /*updateConsultationTerm: (term) => {
-        const data = {
-            ...term,
-            roomName: term.room.name
-        }
-        const slotId = term.slotId;
-        const formParams = qs.stringify(data);
-        return axios.patch("/api/consultations/" + slotId, formParams, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'professorId': 'kostadin.mishev'
-            }
-        });
-    }*/
-
+        debugger;
+        //return axios.post("/pizzas", formParams, {
+        //    headers: {
+        //        'Content-Type': 'application/x-www-form-urlencoded',
+        //    }
+        //});
+    },
 };
 
 export default PizzaService;

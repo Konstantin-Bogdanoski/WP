@@ -15,7 +15,7 @@ const Ingredients = (props) => {
     });
     return (
         <div className="row">
-            <h4 className="text-upper text-left">Ingredients</h4>
+            <h4 className="text-upper text-center">Ingredients</h4>
             <div className="table-responsive">
                 <table className="table tr-history table-striped small">
                     <thead>
