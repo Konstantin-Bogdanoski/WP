@@ -19,7 +19,9 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -151,12 +153,12 @@ public class PizzaController {
     }
 
     @GetMapping("/{id}/ingredients")
-    public List<String> pizzaIngredients(@PathVariable(name = "id") Long pizzaId) {
-        List<String> ingredients = new ArrayList<>();
+    public Map<String, Float> pizzaIngredients(@PathVariable(name = "id") Long pizzaId) {
+        Map<String, Float> ingredients = new HashMap<>();
         if (!pizzaService.findOne(pizzaId).isPresent())
             throw new PizzaNotFoundException();
         pizzaService.findOne(pizzaId).get().getPizzaIngredients().forEach(pizzaIngredient -> {
-            ingredients.add(pizzaIngredient.getIngredient().getName());
+            ingredients.put(pizzaIngredient.getIngredient().getName(), pizzaIngredient.getAmount());
         });
         return ingredients;
     }

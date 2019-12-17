@@ -10,9 +10,16 @@ const Pizza = (props) => {
 
     useEffect(() => {
         axios.get("/pizzas/" + props.pizza.id + "/ingredients").then((data) => {
-            const ingredients = data.data.map((ingredient, index) => {
+            const ingredients = Object.keys(data.data).map((ingredient) => {
                 return (
-                    <li className="list-group" key={index}>{ingredient}</li>
+                    <tr className="col-md-6 mt-2 col-sm-12">
+                        <td>
+                            {ingredient}
+                        </td>
+                        <td>
+                            {data.data[ingredient]}g
+                        </td>
+                    </tr>
                 );
             });
             setIngredient(ingredients);
@@ -27,16 +34,17 @@ const Pizza = (props) => {
                         {props.pizza.name}
                     </div>
                     <div className="col-md-6 text-right">
-                        <button href="#" className="btn btn-light" title="Order">
-                            <i className="fa fa-star"/>
-                        </button>
-                        <button className="btn btn-default" to={"/pizzas/" + props.pizza.id + "/edit"}><i
-                            className="fa fa-pencil"/>Edit
-                        </button>
-                        <button onClick={() => props.onDelete(props.pizza.id)} className="btn btn-danger"
-                                title="Delete">
-                            <i className="fa fa-trash"/>
-                        </button>
+                        <Link to={"/pizzas/" + props.pizza.id + "/edit"}
+                              className="btn btn-sm btn-secondary">
+                            <span className="fa fa-edit"/>
+                            <span><strong>Edit</strong></span>
+                        </Link>
+                        <Link to={"/pizzas"} onClick={() => {
+                            this.props.onDelete(props.pizza.id)
+                        }} className="btn btn-sm btn-outline-secondary ">
+                            <span className="fa fa-remove"/>
+                            <span><strong>Remove</strong></span>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -45,11 +53,20 @@ const Pizza = (props) => {
 
     const PizzaBody = () => {
         return (
-            <div className="row">
-                <div className="col-md-6 font-weight-bold">Ingredients</div>
-                <ul className="list-group">
+            <div className="table-responsive">
+                <table className="table tr-history table-striped small">
+                    <thead>
+                    <tr>
+                        <th>
+                            Ingredient
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                    </tr>
+                    </thead>
                     {ingredients}
-                </ul>
+                </table>
             </div>
         );
     };
