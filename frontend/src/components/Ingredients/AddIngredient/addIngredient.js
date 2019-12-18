@@ -25,7 +25,7 @@ const AddIngredient = (props) => {
                     <label htmlFor="ingredient" className="col-sm-4 offset-sm-1 text-left">Name</label>
                     <div className="col-sm-6">
                         <input type="text"
-                               className="form-control" id="ingredient" name={"ingredientName"}
+                               className="form-control" id="ingredient" name={"name"}
                                placeholder="Ingredient name" required maxLength="50"/>
                     </div>
                 </div>

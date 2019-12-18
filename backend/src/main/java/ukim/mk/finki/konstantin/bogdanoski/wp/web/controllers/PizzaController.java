@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -33,11 +34,13 @@ public class PizzaController {
     private PizzaService pizzaService;
     private PizzaIngredientService pizzaIngredientService;
     private IngredientService ingredientService;
+    private final Logger logger;
 
-    public PizzaController(PizzaService pizzaService, PizzaIngredientService pizzaIngredientService, IngredientService ingredientService) {
+    public PizzaController(PizzaService pizzaService, PizzaIngredientService pizzaIngredientService, IngredientService ingredientService, Logger logger) {
         this.pizzaService = pizzaService;
         this.pizzaIngredientService = pizzaIngredientService;
         this.ingredientService = ingredientService;
+        this.logger = logger;
     }
 
     @PostMapping
@@ -108,6 +111,7 @@ public class PizzaController {
 
     @DeleteMapping("/{id}")
     public ModelAndView deletePizza(@PathVariable(name = "id") Long pizzaId) {
+        logger.info("\u001B[33mDELETE method CALLED from PizzaController\u001B[0m");
         if (pizzaService.findOne(pizzaId).isPresent()) {
             pizzaIngredientService.deleteAllByPizza(pizzaService.findOne(pizzaId).get());
             pizzaService.delete(pizzaId);
@@ -118,6 +122,7 @@ public class PizzaController {
 
     @GetMapping
     public Page<Pizza> getPizzas(@RequestParam(name = "totalIngredients", required = false, defaultValue = "0") Long totalIngredients, Pageable pageable) {
+        logger.info("\u001B[33mGET method CALLED from PizzaController\u001B[0m");
         if (totalIngredients <= 0)
             return pizzaService.findPaginated(pageable);
 
@@ -132,6 +137,7 @@ public class PizzaController {
 
     @GetMapping("/{id}")
     public Pizza getPizza(@PathVariable(name = "id") Long pizzaId) {
+        logger.info("\u001B[33mGET{id} method CALLED from PizzaController\u001B[0m");
         if (pizzaService.findOne(pizzaId).isPresent())
             return pizzaService.findOne(pizzaId).get();
         throw new PizzaNotFoundException();
@@ -139,6 +145,7 @@ public class PizzaController {
 
     @GetMapping("/compare")
     public List<Ingredient> comparePizzas(@RequestParam(name = "pizza1") Long id1, @RequestParam(name = "pizza2") Long id2) {
+        logger.info("\u001B[33mGET{compare} method CALLED from PizzaController\u001B[0m");
         if (pizzaService.findOne(id1).isPresent() && pizzaService.findOne(id2).isPresent()) {
             Pizza pizza1 = pizzaService.findOne(id1).get();
             Pizza pizza2 = pizzaService.findOne(id2).get();
@@ -154,6 +161,7 @@ public class PizzaController {
 
     @GetMapping("/{id}/ingredients")
     public Map<String, Float> pizzaIngredients(@PathVariable(name = "id") Long pizzaId) {
+        logger.info("\u001B[33mGET{ingredients} method CALLED from PizzaController\u001B[0m");
         Map<String, Float> ingredients = new HashMap<>();
         if (!pizzaService.findOne(pizzaId).isPresent())
             throw new PizzaNotFoundException();

@@ -7,6 +7,9 @@ import axios from '../custom-axios/axios.js';
 const OrderService = {
     fetchOrdersPizza: () => {
         return axios.get("/orders/pizzas");
+    },
+    fetchFavoriteHours: () => {
+        return axios.get("/orders/hours");
     }
 };
 

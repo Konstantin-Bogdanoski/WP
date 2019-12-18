@@ -17,6 +17,7 @@ import FavoritePizza from "../Statistic/FavoritePizza/favoritePizza";
 import OrderService from "../../service/orderService";
 import AddPizza from "../Pizzas/AddPizza/addPizza";
 import Pizza from "../Pizzas/Pizza/pizza";
+import FavoriteHours from "../Statistic/FavoriteHours/favoriteHours";
 
 class App extends Component {
 
@@ -25,7 +26,8 @@ class App extends Component {
         this.state = {
             pizzas: [],
             ingredients: [],
-            orders: []
+            orders: [],
+            hours: []
         }
     }
 
@@ -33,6 +35,7 @@ class App extends Component {
         this.loadIngredients();
         this.loadPizzas();
         this.loadOrdersPizza();
+        this.loadFavoriteHours();
     }
 
     loadPizzas() {
@@ -60,6 +63,16 @@ class App extends Component {
             this.setState((prevState) => {
                 return {
                     "orders": resp.data
+                }
+            })
+        })
+    }
+
+    loadFavoriteHours() {
+        OrderService.fetchFavoriteHours().then(resp => {
+            this.setState((prevState) => {
+                return {
+                    "hours": resp.data
                 }
             })
         })
@@ -143,6 +156,7 @@ class App extends Component {
                                    render={() => <DetailsIngredient/>}/>
                             <Route path="/pizzas/new" exact render={() => <AddPizza onSubmit={this.savePizza}/>}/>
                             <Redirect to={"/"}/>
+                            <Route path={"/"} exact render={() => <FavoriteHours hours={this.state.hours}/>}/>
                         </div>
                     </main>
                     <Footer/>

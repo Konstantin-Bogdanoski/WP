@@ -22,12 +22,11 @@ const EditIngredient = (props) => {
         props.onSubmit(
             {
                 "ingredientID": id,
-                "name": e.target.ingredientName.value,
+                "name": e.target.name.value,
                 "spicy": e.target.isSpicy.checked,
                 "veggie": e.target.isVeggie.checked
             },
         );
-
     };
 
     const handleTermOnChange = (e) => {
@@ -36,16 +35,15 @@ const EditIngredient = (props) => {
         setIngredient({paramName: paramValue});
     };
 
-
     return (
-        <div className="row">
+        <div className="table-responsive">
             <form className="card" onSubmit={onFormSubmit}>
                 <h4 className="text-upper text-left">Edit Ingredient</h4>
                 <div className="form-group row">
                     <label htmlFor="ingredient" className="col-sm-4 offset-sm-1 text-left">Name</label>
                     <div className="col-sm-6">
                         <input type="text" onChange={handleTermOnChange} value={ingredient.name}
-                               className="form-control" id="ingredient" name={"ingredientName"}
+                               className="form-control" id="ingredient" name={"name"}
                                placeholder="Ingredient name" required maxLength="50"/>
                     </div>
                 </div>

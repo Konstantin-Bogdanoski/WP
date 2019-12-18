@@ -10,6 +10,8 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -20,16 +22,36 @@ import java.util.Map;
 public class OrderController {
     private OrderService orderService;
     private PizzaService pizzaService;
+    private final Logger logger;
 
-    public OrderController(OrderService orderService, PizzaService pizzaService) {
+    public OrderController(OrderService orderService, PizzaService pizzaService, Logger logger) {
         this.orderService = orderService;
         this.pizzaService = pizzaService;
+        this.logger = logger;
     }
 
     @GetMapping("/pizzas")
     public Map<String, Long> getOrders() {
+        logger.info("\u001B[33mGET{pizzas} method CALLED from OrderController\u001B[0m");
         Map<String, Long> orders = new HashMap<>();
         pizzaService.findAll().forEach(pizza -> orders.put(pizza.getName(), (long) orderService.findByPizza(pizza).size()));
         return orders;
+    }
+
+    @GetMapping("/hours")
+    public Map<String, Long> getFavoriteHours() {
+        logger.info("\u001B[33mGET{hours} method CALLED from OrderController\u001B[0m");
+        Map<String, Long> favoriteHours = new HashMap<>();
+        for (int i = 1; i <= 24; i++) {
+            AtomicLong orders = new AtomicLong(0L);
+            int finalI = i;
+            orderService.findAll().forEach(pizzaOrder -> {
+                if (finalI == pizzaOrder.getDateCreated().getHour()) {
+                    orders.getAndIncrement();
+                }
+            });
+            favoriteHours.put(i + ":" + (i + 1), orders.get());
+        }
+        return favoriteHours;
     }
 }

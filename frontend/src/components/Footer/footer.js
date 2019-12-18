@@ -5,7 +5,7 @@ import React from 'react';
 
 const Footer = () => {
     return (
-        <footer>
+        <footer className="card-footer">
         <span>
             Pizza Delizziosso, 2019
         </span>

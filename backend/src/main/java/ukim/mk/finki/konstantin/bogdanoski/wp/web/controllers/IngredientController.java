@@ -4,12 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sun.awt.SunHints;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientAlreadyExistsException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.IngredientNotFoundException;
 import ukim.mk.finki.konstantin.bogdanoski.wp.exception.NoMoreSpicyIngredientsException;
@@ -22,6 +20,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaIngredientService;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -33,10 +32,12 @@ import java.util.stream.Collectors;
 public class IngredientController {
     private IngredientService ingredientService;
     private PizzaIngredientService pizzaIngredientService;
+    private final Logger logger;
 
-    public IngredientController(IngredientService ingredientService, PizzaIngredientService pizzaIngredientService) {
+    public IngredientController(IngredientService ingredientService, PizzaIngredientService pizzaIngredientService, Logger logger) {
         this.ingredientService = ingredientService;
         this.pizzaIngredientService = pizzaIngredientService;
+        this.logger = logger;
     }
 
     /*@PostMapping
@@ -56,6 +57,7 @@ public class IngredientController {
     public Ingredient addIngredient(@RequestParam(value = "name") String name,
                                     @RequestParam(value = "spicy") boolean spicy,
                                     @RequestParam(value = "veggie") boolean veggie) {
+        logger.info("\u001B[33mPOST method CALLED from IngredientController\u001B[0m");
         ingredientService.findAll().forEach(ing -> {
             if (ing.getName().equals(name))
                 throw new IngredientAlreadyExistsException();
@@ -90,6 +92,7 @@ public class IngredientController {
                                          @RequestParam(value = "name") String name,
                                          @RequestParam(value = "spicy") boolean spicy,
                                          @RequestParam(value = "veggie") boolean veggie) {
+        logger.info("\u001B[33mPATCH method CALLED from IngredientController\u001B[0m");
         if (ingredientService.findOne(id).isPresent()) {
             if (ingredientService.findAll().stream().filter(Ingredient::isSpicy).map(Ingredient::getId).count() == 4)
                 throw new NoMoreSpicyIngredientsException();
@@ -106,6 +109,7 @@ public class IngredientController {
 
     @DeleteMapping("/{id}")
     public ModelAndView deleteIngredient(@PathVariable Long id, ModelMap model) {
+        logger.info("\u001B[33mDELETE method CALLED from IngredientController\u001B[0m");
         if (ingredientService.findOne(id).isPresent())
             ingredientService.delete(id);
         else
@@ -115,6 +119,7 @@ public class IngredientController {
 
     @GetMapping
     public Page<Ingredient> getIngredients(@PageableDefault(value = 5) Pageable pageable, @RequestParam(name = "spicy", required = false) boolean spicy) {
+        logger.info("\u001B[33mGET method CALLED from IngredientController\u001B[0m");
         List<Ingredient> ingredients = ingredientService.findAll();
         if (!spicy) {
             if (!ingredients.isEmpty()) {
@@ -130,6 +135,7 @@ public class IngredientController {
 
     @GetMapping("/{id}")
     public Ingredient getIngredient(@PathVariable Long id) {
+        logger.info("\u001B[33mGET{id} method CALLED from IngredientController\u001B[0m");
         if (ingredientService.findOne(id).isPresent())
             return ingredientService.findOne(id).get();
         throw new IngredientNotFoundException();
@@ -137,6 +143,8 @@ public class IngredientController {
 
     @GetMapping("/{id}/pizzas")
     public List<Pizza> getPizzasWithIngredient(@PathVariable(name = "id") Long ingredientID) {
+        logger.info("\u001B[33mGET{pizzas}" +
+                " method CALLED from IngredientController\u001B[0m");
         return pizzaIngredientService.findAll()
                 .stream()
                 .filter(ingr -> ingr.getIngredient().getId().equals(ingredientID))
