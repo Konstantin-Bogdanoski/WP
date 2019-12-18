@@ -1,7 +1,7 @@
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
  */
-import React, {Component} from "react";
+import React from "react";
 import Ingredient from "./Ingredient/ingredient";
 import {Link} from "react-router-dom";
 

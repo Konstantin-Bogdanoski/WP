@@ -12,7 +12,7 @@ const FavoriteHours = (props) => {
         data: [{
             type: "column",
             dataPoints: Object.keys(props.hours).map((hour) => {
-                return {label: hour, y: props.hours[hour]}
+                return {label: (hour + ":00 - " + (parseInt(hour) + 1) + ":00"), y: props.hours[hour]}
             }),
         }]
     };

@@ -6,9 +6,12 @@ import React from 'react';
 const Footer = () => {
     return (
         <footer className="card-footer">
-        <span>
-            Pizza Delizziosso, 2019
-        </span>
+            <div>
+                Konstantin Bogdanoski
+            </div>
+            <div>
+                Pizza Delizziosso, 2019
+            </div>
         </footer>
     );
 };

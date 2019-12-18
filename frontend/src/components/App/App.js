@@ -16,7 +16,6 @@ import DetailsIngredient from "../Ingredients/Ingredient/DetailsIngredient/detai
 import FavoritePizza from "../Statistic/FavoritePizza/favoritePizza";
 import OrderService from "../../service/orderService";
 import AddPizza from "../Pizzas/AddPizza/addPizza";
-import Pizza from "../Pizzas/Pizza/pizza";
 import FavoriteHours from "../Statistic/FavoriteHours/favoriteHours";
 
 class App extends Component {
@@ -40,7 +39,7 @@ class App extends Component {
 
     loadPizzas() {
         PizzaService.fetchPizzas().then(resp => {
-            this.setState((prevState) => {
+            this.setState(() => {
                 return {
                     "pizzas": resp.data.content
                 }
@@ -50,7 +49,7 @@ class App extends Component {
 
     loadIngredients() {
         IngredientService.fetchIngredients().then(resp => {
-            this.setState((prevState) => {
+            this.setState(() => {
                 return {
                     "ingredients": resp.data.content
                 }
@@ -60,7 +59,7 @@ class App extends Component {
 
     loadOrdersPizza() {
         OrderService.fetchOrdersPizza().then(resp => {
-            this.setState((prevState) => {
+            this.setState(() => {
                 return {
                     "orders": resp.data
                 }
@@ -70,7 +69,7 @@ class App extends Component {
 
     loadFavoriteHours() {
         OrderService.fetchFavoriteHours().then(resp => {
-            this.setState((prevState) => {
+            this.setState(() => {
                 return {
                     "hours": resp.data
                 }
@@ -129,7 +128,7 @@ class App extends Component {
     deleteIngredient = ((id) => {
         IngredientService.deleteIngredient(id).then();
         this.setState((prevState) => {
-            const newIngredients = prevState.ingredients.filter((ingredient, index) => {
+            const newIngredients = prevState.ingredients.filter((ingredient) => {
                 return ingredient.id !== id;
             });
             return {"ingredients": newIngredients}

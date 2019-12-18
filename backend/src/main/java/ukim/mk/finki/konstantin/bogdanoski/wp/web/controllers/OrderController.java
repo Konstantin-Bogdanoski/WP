@@ -39,9 +39,9 @@ public class OrderController {
     }
 
     @GetMapping("/hours")
-    public Map<String, Long> getFavoriteHours() {
+    public Map<Integer, Long> getFavoriteHours() {
         logger.info("\u001B[33mGET{hours} method CALLED from OrderController\u001B[0m");
-        Map<String, Long> favoriteHours = new HashMap<>();
+        Map<Integer, Long> favoriteHours = new HashMap<>();
         for (int i = 1; i <= 24; i++) {
             AtomicLong orders = new AtomicLong(0L);
             int finalI = i;
@@ -50,7 +50,7 @@ public class OrderController {
                     orders.getAndIncrement();
                 }
             });
-            favoriteHours.put(i + ":" + (i + 1), orders.get());
+            favoriteHours.put(i, orders.get());
         }
         return favoriteHours;
     }

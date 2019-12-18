@@ -29,7 +29,6 @@ const IngredientService = {
     editIngredient(updatedIngredient) {
         const data = {
             ...updatedIngredient,
-            name: updatedIngredient.name
         };
         const ingredientId = updatedIngredient.ingredientID;
         const formParams = qs.stringify(data);
@@ -43,7 +42,6 @@ const IngredientService = {
     addIngredient(ingredient) {
         const data = {
             ...ingredient,
-            ingredientName: ingredient.name
         };
         const formParams = qs.stringify(data);
         return axios.post("/ingredients", formParams, {
