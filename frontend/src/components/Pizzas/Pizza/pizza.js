@@ -12,7 +12,7 @@ const Pizza = (props) => {
         axios.get("/pizzas/" + props.pizza.id + "/ingredients").then((data) => {
             const ingredients = Object.keys(data.data).map((ingredient) => {
                 return (
-                    <tr className="col-md-6 mt-2 col-sm-12">
+                    <tr className="col-md-6 mt-2 col-sm-12" key={ingredient}>
                         <td>
                             {ingredient}
                         </td>
