@@ -18,11 +18,10 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaIngredientService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Konstantin Bogdanoski (konstantin.b@live.com)
@@ -35,6 +34,7 @@ public class PizzaController {
     private PizzaIngredientService pizzaIngredientService;
     private IngredientService ingredientService;
     private final Logger logger;
+    private static final Pattern p = Pattern.compile("[^\\d]*[\\d]+[^\\d]+([\\d]+)");
 
     public PizzaController(PizzaService pizzaService, PizzaIngredientService pizzaIngredientService, IngredientService ingredientService, Logger logger) {
         this.pizzaService = pizzaService;
@@ -43,7 +43,7 @@ public class PizzaController {
         this.logger = logger;
     }
 
-    @PostMapping
+    /*@PostMapping
     public ModelAndView addPizza(@ModelAttribute(name = "pizza") Pizza newPizza, @RequestParam(name = "newIngredients") ArrayList<Long> newIngredients) {
         pizzaService.findAll().forEach(pizza1 -> {
             if (pizza1.getName().equals(newPizza.getName()))
@@ -79,6 +79,69 @@ public class PizzaController {
                 }
             });
         return new ModelAndView("redirect:/admin/pizzas");
+    }*/
+
+    @PostMapping
+    public Pizza addPizza(@RequestParam Map<String, String> newIngredients) {
+        String name = newIngredients.get("name");
+        String description = newIngredients.get("description");
+        boolean veggie = newIngredients.get("veggie").equals("true");
+        pizzaService.findAll().forEach(pizza1 -> {
+            if (pizza1.getName().equals(name))
+                throw new PizzaAlreadyExistsException();
+        });
+
+        Set<String> keys = newIngredients.keySet();
+        Map<String, String> newIngr = new HashMap<>();
+        keys.forEach(val -> {
+            if (val.contains("newIngredient")) {
+                String amount = newIngredients.get(val);
+                Matcher m = p.matcher(val);
+                String ingID = null;
+                if (m.find()) {
+                    ingID = (m.group(1)); // second matched digits
+                }
+                newIngr.put(ingID, amount);
+            }
+        });
+
+        Pizza newPizza = new Pizza();
+        newPizza.setName(name);
+        newPizza.setDescription(description);
+        newPizza.setVeggie(veggie);
+        pizzaService.save(newPizza);
+        Pizza pizza = pizzaService.findByName(name);
+        List<PizzaIngredient> pizzaIngredients = new ArrayList<>();
+        newIngr.forEach((ing, amount) -> {
+            if (ingredientService.findOne(Long.parseLong(ing)).isPresent()) {
+                PizzaIngredient pizzaIngredient = new PizzaIngredient();
+                pizzaIngredient.setPizza(pizza);
+                pizzaIngredient.setIngredient(ingredientService.findOne(Long.parseLong(ing)).get());
+                PizzaIngredientCompositeKey compositeKey = new PizzaIngredientCompositeKey();
+                compositeKey.setPizzaId(pizza.getId());
+                compositeKey.setIngredientId(Long.parseLong(ing));
+                pizzaIngredient.setCompositeKey(compositeKey);
+                pizzaIngredient.setAmount(Float.parseFloat(amount));
+                pizzaIngredients.add(pizzaIngredient);
+                pizzaIngredientService.save(pizzaIngredient);
+            } else
+                throw new IngredientNotFoundException();
+        });
+
+        pizza.setPizzaIngredients(pizzaIngredients);
+        pizza.setDateCreated(LocalDateTime.now());
+        pizza.setDateUpdated(LocalDateTime.now());
+        pizzaService.save(pizza);
+
+        if (pizza.isVeggie())
+            pizza.getPizzaIngredients().forEach(ingredient -> {
+                if (!ingredient.getIngredient().isVeggie()) {
+                    pizzaIngredientService.deleteAllByPizza(pizza);
+                    pizzaService.delete(pizza.getId());
+                    throw new PizzaIngredientNotVeggieException();
+                }
+            });
+        return pizza;
     }
 
     @PutMapping("/{id}")
@@ -110,14 +173,15 @@ public class PizzaController {
     }
 
     @DeleteMapping("/{id}")
-    public ModelAndView deletePizza(@PathVariable(name = "id") Long pizzaId) {
+    public Pizza deletePizza(@PathVariable(name = "id") Long pizzaId) {
         logger.info("\u001B[33mDELETE method CALLED from PizzaController\u001B[0m");
+        Pizza pizza = pizzaService.findOne(pizzaId).get();
         if (pizzaService.findOne(pizzaId).isPresent()) {
             pizzaIngredientService.deleteAllByPizza(pizzaService.findOne(pizzaId).get());
             pizzaService.delete(pizzaId);
         } else
             throw new PizzaNotFoundException();
-        return new ModelAndView("redirect:/admin/pizzas");
+        return pizza;
     }
 
     @GetMapping
@@ -165,9 +229,7 @@ public class PizzaController {
         Map<String, Float> ingredients = new HashMap<>();
         if (!pizzaService.findOne(pizzaId).isPresent())
             throw new PizzaNotFoundException();
-        pizzaService.findOne(pizzaId).get().getPizzaIngredients().forEach(pizzaIngredient -> {
-            ingredients.put(pizzaIngredient.getIngredient().getName(), pizzaIngredient.getAmount());
-        });
+        pizzaService.findOne(pizzaId).get().getPizzaIngredients().forEach(pizzaIngredient -> ingredients.put(pizzaIngredient.getIngredient().getName(), pizzaIngredient.getAmount()));
         return ingredients;
     }
 }

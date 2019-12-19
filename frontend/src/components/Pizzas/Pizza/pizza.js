@@ -40,7 +40,7 @@ const Pizza = (props) => {
                             <span><strong>Edit</strong></span>
                         </Link>
                         <Link to={"/pizzas"} onClick={() => {
-                            this.props.onDelete(props.pizza.id)
+                            props.onDelete(props.pizza.id)
                         }} className="btn btn-sm btn-outline-secondary ">
                             <span className="fa fa-remove"/>
                             <span><strong>Remove</strong></span>

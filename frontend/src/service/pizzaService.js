@@ -23,12 +23,15 @@ const PizzaService = {
             ...pizza,
         };
         const formParams = qs.stringify(data);
-        debugger;
-        //return axios.post("/pizzas", formParams, {
-        //    headers: {
-        //        'Content-Type': 'application/x-www-form-urlencoded',
-        //    }
-        //});
+        return axios.post("/pizzas", formParams, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        });
+    },
+
+    deletePizza: (pizzaID) => {
+        return axios.delete("/pizzas/" + pizzaID);
     },
 };
 

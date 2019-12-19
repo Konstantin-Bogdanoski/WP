@@ -10,9 +10,7 @@ const AddPizza = (props) => {
 
     useEffect(() => {
         axios.get("/ingredients").then((data) => {
-            debugger;
             const ingredients = Object.keys(data.data.content).map((ingredient, index) => {
-                debugger;
                 return (
                     <tr>
                         <td scope="col">
@@ -38,30 +36,33 @@ const AddPizza = (props) => {
     const handleCheckboxChange = (e) => {
         const paramName = e.target.name;
         const paramValue = e.target.value;
-        debugger;
         document.getElementById(e.target.value + "amount").disabled = !document.getElementById(e.target.value + "amount").disabled;
     };
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        //props.history.push('/pizzas');
-        debugger;
+
+        let final = [];
         let newIngredients = Object.keys(e.target.newIngredients).map((cbox) => {
-            debugger;
             if (e.target.newIngredients[cbox].checked)
                 return e.target.newIngredients[cbox];
-        });
-        debugger;
-        let temp = newIngredients.filter((item) => {
+        }).filter((item) => {
             if (item !== undefined)
                 return item;
+        }).map((item) => {
+            let id = item.value;
+            let amount = document.getElementById(id + "amount").value;
+            let obj = {};
+            obj[id] = amount;
+            final.push(obj);
         });
-        debugger;
+        props.history.push('/pizzas');
         props.onSubmit(
             {
                 "name": e.target.pizzaName.value,
+                "description": e.target.pizzaDescription.value,
                 "veggie": e.target.isVeggie.checked,
-                "newIngredients": temp
+                "newIngredients": final
             }
         );
     };

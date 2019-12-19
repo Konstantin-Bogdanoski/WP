@@ -110,7 +110,6 @@ class App extends Component {
     });
 
     savePizza = ((newPizza) => {
-        debugger;
         PizzaService.addPizza(newPizza).then(resp => {
             const newPiz = resp.data;
             this.setState((prevState) => {
@@ -135,6 +134,16 @@ class App extends Component {
         })
     });
 
+    deletePizza = ((id) => {
+        PizzaService.deletePizza(id).then();
+        this.setState((prevState) => {
+            const newPizzas = prevState.pizzas.filter((pizza) => {
+                return pizza.id !== id;
+            });
+            return {"pizzas": newPizzas}
+        })
+    });
+
     render() {
         return (
             <div className="App">
@@ -143,7 +152,8 @@ class App extends Component {
                     <main role="main" className="mt-3">
                         <div className="container">
                             <Route path={"/"} exact render={() => <FavoritePizza orders={this.state.orders}/>}/>
-                            <Route path={"/pizzas"} exact render={() => <Pizzas pizzas={this.state.pizzas}/>}/>
+                            <Route path={"/pizzas"} exact render={() => <Pizzas pizzas={this.state.pizzas}
+                                                                                onDelete={this.deletePizza}/>}/>
                             <Route path="/ingredients" exact
                                    render={() => <Ingredients ingredients={this.state.ingredients}
                                                               onDelete={this.deleteIngredient}/>}/>
