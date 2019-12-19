@@ -33,6 +33,10 @@ const PizzaService = {
     deletePizza: (pizzaID) => {
         return axios.delete("/pizzas/" + pizzaID);
     },
+
+    findPizzas: (searchTerm) => {
+        return axios.get(`/pizzas?searchTerm=${searchTerm}`);
+    }
 };
 
 export default PizzaService;

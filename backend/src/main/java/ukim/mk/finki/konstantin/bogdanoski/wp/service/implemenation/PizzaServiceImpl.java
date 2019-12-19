@@ -8,7 +8,6 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.repository.PizzaRepository;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,5 +41,10 @@ public class PizzaServiceImpl extends BaseEntityCrudServiceImpl<Pizza, PizzaRepo
     @Override
     public Page<Pizza> findPaginated(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    @Override
+    public List<Pizza> findByPizzaNameLike(String searchTerm) {
+        return repository.findAllByNameContains(searchTerm);
     }
 }

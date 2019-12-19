@@ -17,6 +17,7 @@ import FavoritePizza from "../Statistic/FavoritePizza/favoritePizza";
 import OrderService from "../../service/orderService";
 import AddPizza from "../Pizzas/AddPizza/addPizza";
 import FavoriteHours from "../Statistic/FavoriteHours/favoriteHours";
+import Pizza from "../Pizzas/Pizza/pizza";
 
 class App extends Component {
 
@@ -77,6 +78,16 @@ class App extends Component {
         })
     }
 
+    searchPizzas = ((searchTerm) => {
+        PizzaService.findPizzas(searchTerm).then(resp => {
+            this.setState(() => {
+                return {
+                    "pizzas": resp.data.content
+                }
+            })
+        })
+    });
+
     updateIngredient = ((updatedIngredient) => {
         IngredientService.editIngredient(updatedIngredient).then(resp => {
             const newIngredient = resp.data;
@@ -131,17 +142,14 @@ class App extends Component {
                 return ingredient.id !== id;
             });
             return {"ingredients": newIngredients}
-        })
+        });
+        this.loadIngredients();
     });
 
     deletePizza = ((id) => {
-        PizzaService.deletePizza(id).then();
-        this.setState((prevState) => {
-            const newPizzas = prevState.pizzas.filter((pizza) => {
-                return pizza.id !== id;
-            });
-            return {"pizzas": newPizzas}
-        })
+        PizzaService.deletePizza(id).then((res) =>
+            this.loadPizzas()
+        );
     });
 
     render() {
@@ -153,7 +161,8 @@ class App extends Component {
                         <div className="container">
                             <Route path={"/"} exact render={() => <FavoritePizza orders={this.state.orders}/>}/>
                             <Route path={"/pizzas"} exact render={() => <Pizzas pizzas={this.state.pizzas}
-                                                                                onDelete={this.deletePizza}/>}/>
+                                                                                onDelete={this.deletePizza}
+                                                                                onSearch={this.searchPizzas}/>}/>
                             <Route path="/ingredients" exact
                                    render={() => <Ingredients ingredients={this.state.ingredients}
                                                               onDelete={this.deleteIngredient}/>}/>

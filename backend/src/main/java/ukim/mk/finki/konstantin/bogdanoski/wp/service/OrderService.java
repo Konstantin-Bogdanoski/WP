@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface OrderService extends BaseEntityCrudService<PizzaOrder> {
     public List<PizzaOrder> findByPizza(Pizza pizza);
+
+    public void deleteByPizza(Pizza pizza);
 }

@@ -14,6 +14,7 @@ import ukim.mk.finki.konstantin.bogdanoski.wp.model.Pizza;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredient;
 import ukim.mk.finki.konstantin.bogdanoski.wp.model.PizzaIngredientCompositeKey;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.IngredientService;
+import ukim.mk.finki.konstantin.bogdanoski.wp.service.OrderService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaIngredientService;
 import ukim.mk.finki.konstantin.bogdanoski.wp.service.PizzaService;
 
@@ -32,13 +33,15 @@ import java.util.regex.Pattern;
 public class PizzaController {
     private PizzaService pizzaService;
     private PizzaIngredientService pizzaIngredientService;
+    private OrderService orderService;
     private IngredientService ingredientService;
     private final Logger logger;
     private static final Pattern p = Pattern.compile("[^\\d]*[\\d]+[^\\d]+([\\d]+)");
 
-    public PizzaController(PizzaService pizzaService, PizzaIngredientService pizzaIngredientService, IngredientService ingredientService, Logger logger) {
+    public PizzaController(PizzaService pizzaService, PizzaIngredientService pizzaIngredientService, OrderService orderService, IngredientService ingredientService, Logger logger) {
         this.pizzaService = pizzaService;
         this.pizzaIngredientService = pizzaIngredientService;
+        this.orderService = orderService;
         this.ingredientService = ingredientService;
         this.logger = logger;
     }
@@ -178,6 +181,7 @@ public class PizzaController {
         Pizza pizza = pizzaService.findOne(pizzaId).get();
         if (pizzaService.findOne(pizzaId).isPresent()) {
             pizzaIngredientService.deleteAllByPizza(pizzaService.findOne(pizzaId).get());
+            orderService.deleteByPizza(pizza);
             pizzaService.delete(pizzaId);
         } else
             throw new PizzaNotFoundException();
@@ -185,18 +189,24 @@ public class PizzaController {
     }
 
     @GetMapping
-    public Page<Pizza> getPizzas(@RequestParam(name = "totalIngredients", required = false, defaultValue = "0") Long totalIngredients, Pageable pageable) {
+    public Page<Pizza> getPizzas(@RequestParam(name = "totalIngredients", required = false, defaultValue = "0") Long totalIngredients,
+                                 @RequestParam(name = "searchTerm", required = false, defaultValue = "") String searchTerm,
+                                 Pageable pageable) {
         logger.info("\u001B[33mGET method CALLED from PizzaController\u001B[0m");
-        if (totalIngredients <= 0)
+        if (totalIngredients <= 0 && searchTerm.equals(""))
             return pizzaService.findPaginated(pageable);
 
-        List<Pizza> finalList = new ArrayList<>();
-        pizzaService.findAll().forEach(pizza -> {
-            if (pizza.getPizzaIngredients().size() < totalIngredients)
-                finalList.add(pizza);
-        });
-
-        return new PageImpl<>(finalList);
+        if (searchTerm.equals("")) {
+            List<Pizza> finalList = new ArrayList<>();
+            pizzaService.findAll().forEach(pizza -> {
+                if (pizza.getPizzaIngredients().size() < totalIngredients)
+                    finalList.add(pizza);
+            });
+            return new PageImpl<>(finalList);
+        } else {
+            List<Pizza> finalList = pizzaService.findByPizzaNameLike(searchTerm);
+            return new PageImpl<>(finalList);
+        }
     }
 
     @GetMapping("/{id}")
